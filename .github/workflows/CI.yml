@@ -1,0 +1,33 @@
+name: CI
+
+on: [push]
+
+jobs:
+  acceptance-tests:
+    name: Acceptance Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Start services
+        run: |
+          docker-compose up -d
+      - name: Run acceptance tests
+        run: |
+          cd tests/acceptance
+          npm install
+          npm test
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: [services/accounts]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ matrix.directory }}
+      - name: Run unit tests
+        run: npm test
+        working-directory: ${{ matrix.directory }}
