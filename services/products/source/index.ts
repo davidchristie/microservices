@@ -14,8 +14,8 @@ const typeDefs = gql`
   }
 
   type Product @key(fields: "id") {
-    upc: String!
-    name: String
+    id: String!
+    name: String!
     price: Int
     weight: Int
   }
@@ -33,24 +33,3 @@ const server = new ApolloServer({
 server.listen({ port: process.env.PORT }).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
-
-const products = [
-  {
-    upc: "1",
-    name: "Table",
-    price: 899,
-    weight: 100
-  },
-  {
-    upc: "2",
-    name: "Couch",
-    price: 1299,
-    weight: 1000
-  },
-  {
-    upc: "3",
-    name: "Chair",
-    price: 54,
-    weight: 50
-  }
-];
