@@ -14,7 +14,7 @@ jobs:
         run: npm install
         working-directory: tests/acceptance
       - name: Run acceptance tests
-        run: npm test
+        run: npm test -- --verbose
         working-directory: tests/acceptance
 
   unit-tests:
@@ -29,5 +29,5 @@ jobs:
         run: npm install
         working-directory: ${{ matrix.directory }}
       - name: Run unit tests
-        run: npm test
+        run: npm test -- --coverage --verbose
         working-directory: ${{ matrix.directory }}

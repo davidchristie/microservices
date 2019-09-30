@@ -11,7 +11,9 @@ const resolvers = {
       return createProduct({ name });
     },
     async deleteProduct(_, { id }) {
-      return deleteProduct({ id });
+      const product = await getProduct({ id });
+      await deleteProduct({ id });
+      return product;
     }
   },
   Product: {

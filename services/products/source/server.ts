@@ -22,6 +22,7 @@ const typeDefs = gql`
 `;
 
 const server = new ApolloServer({
+  debug: process.env.NODE_ENV !== "production",
   schema: buildFederatedSchema([
     {
       resolvers,

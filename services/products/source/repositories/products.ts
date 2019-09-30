@@ -27,7 +27,7 @@ export async function deleteProduct({ id }): Promise<void> {
   session.close();
 }
 
-export async function getProduct({ id }): Promise<Product | null> {
+export async function getProduct({ id }): Promise<Product> {
   const session = driver.session();
   const result = await session.run(
     "MATCH (p:Product { id: $id }) RETURN p AS product LIMIT 1",
@@ -37,7 +37,10 @@ export async function getProduct({ id }): Promise<Product | null> {
   );
   session.close();
   const exists = result.records.length > 0;
-  return exists ? result.records[0].get("product").properties : null;
+  if (!exists) {
+    throw new Error("Product does not exist.");
+  }
+  return result.records[0].get("product").properties;
 }
 
 export async function getProducts(): Promise<Product[]> {

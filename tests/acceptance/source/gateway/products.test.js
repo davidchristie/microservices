@@ -9,17 +9,17 @@ const {
 
 describe("creating a new product", () => {
   let name;
-  let response;
+  let createProductResponse;
 
   beforeEach(async () => {
     name = faker.commerce.product();
-    response = await createProduct({
+    createProductResponse = await createProduct({
       name
     });
   });
 
   it("returns the new product", () => {
-    expect(response).toEqual({
+    expect(createProductResponse).toEqual({
       createProduct: {
         id: expect.stringMatching(UUID_REGEX),
         name
@@ -28,14 +28,16 @@ describe("creating a new product", () => {
   });
 
   describe("when product is queried", () => {
+    let getProductResponse;
+
     beforeEach(async () => {
-      response = await getProduct({
-        id: response.createProduct.id
+      getProductResponse = await getProduct({
+        id: createProductResponse.createProduct.id
       });
     });
 
     it("returns the new product", () => {
-      expect(response).toEqual({
+      expect(getProductResponse).toEqual({
         getProduct: {
           id: expect.stringMatching(UUID_REGEX),
           name
@@ -45,29 +47,35 @@ describe("creating a new product", () => {
   });
 
   describe("when products are queried", () => {
+    let getProductsResponse;
+
     beforeEach(async () => {
-      response = await getProducts();
+      getProductsResponse = await getProducts();
     });
 
     it("returns the new product", () => {
-      expect(response).toEqual({
-        getProducts: expect.arrayContaining({
-          id: expect.stringMatching(UUID_REGEX),
-          name
-        })
+      expect(getProductsResponse).toEqual({
+        getProducts: expect.arrayContaining([
+          {
+            id: expect.stringMatching(UUID_REGEX),
+            name
+          }
+        ])
       });
     });
   });
 
   describe("when product is deleted", () => {
+    let deleteProductResponse;
+
     beforeEach(async () => {
-      response = await deleteProduct({
-        id: response.createProduct.id
+      deleteProductResponse = await deleteProduct({
+        id: createProductResponse.createProduct.id
       });
     });
 
     it("returns the deleted product", () => {
-      expect(response).toEqual({
+      expect(deleteProductResponse).toEqual({
         deleteProduct: {
           id: expect.stringMatching(UUID_REGEX),
           name
@@ -75,18 +83,12 @@ describe("creating a new product", () => {
       });
     });
 
-    describe("when product is queried", () => {
-      beforeEach(async () => {
-        response = await getProduct({
-          id: response.deleteProduct.id
-        });
-      });
-
-      it("returns null", () => {
-        expect(response).toEqual({
-          getProduct: null
-        });
-      });
+    it("throws error when product is queried", async () => {
+      return expect(
+        getProduct({
+          id: deleteProductResponse.deleteProduct.id
+        })
+      ).rejects.toThrow("Product does not exist.");
     });
   });
 });
