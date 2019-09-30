@@ -1,31 +1,25 @@
-const { ApolloServer, gql } = require("apollo-server");
-const { buildFederatedSchema } = require("@apollo/federation");
+import { buildFederatedSchema } from "@apollo/federation";
+import { ApolloServer, gql } from "apollo-server";
+import resolvers from "./resolvers";
 
 const typeDefs = gql`
-  extend type Query {
-    topProducts(first: Int = 5): [Product]
+  extend type Mutation {
+    createProduct(name: String!): Product!
+    deleteProduct(id: String!): Product!
   }
 
-  type Product @key(fields: "upc") {
+  extend type Query {
+    getProduct(id: ID): Product!
+    getProducts: [Product]
+  }
+
+  type Product @key(fields: "id") {
     upc: String!
     name: String
     price: Int
     weight: Int
   }
 `;
-
-const resolvers = {
-  Product: {
-    __resolveReference(object) {
-      return products.find(product => product.upc === object.upc);
-    }
-  },
-  Query: {
-    topProducts(_, args) {
-      return products.slice(0, args.first);
-    }
-  }
-};
 
 const server = new ApolloServer({
   schema: buildFederatedSchema([
