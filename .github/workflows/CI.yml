@@ -9,25 +9,25 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Start services
-        run: |
-          docker-compose up -d
+        run: docker-compose up -d
+      - name: Install dependencies
+        run: npm install
+        working-directory: tests/acceptance
       - name: Run acceptance tests
-        run: |
-          cd tests/acceptance
-          npm install
-          npm test
+        run: npm test -- --verbose
+        working-directory: tests/acceptance
 
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: [services/accounts]
+        directory: [services/accounts, services/products]
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
         run: npm install
         working-directory: ${{ matrix.directory }}
       - name: Run unit tests
-        run: npm test
+        run: npm test -- --coverage --verbose
         working-directory: ${{ matrix.directory }}

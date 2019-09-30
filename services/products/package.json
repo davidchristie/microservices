@@ -2,16 +2,32 @@
   "dependencies": {
     "@apollo/federation": "latest",
     "apollo-server": "latest",
-    "graphql": "latest"
+    "graphql": "latest",
+    "neo4j-driver": "^1.7.6",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/faker": "^4.1.5",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.8",
+    "@types/uuid": "^3.4.5",
+    "faker": "^4.1.0",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "source/**/*.{js,ts}"
+    ],
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   },
   "name": "products",
   "private": true,
   "scripts": {
     "build": "tsc",
-    "start": "node build/index.js"
-  },
-  "devDependencies": {
-    "@types/node": "^12.7.8",
-    "typescript": "^3.6.3"
+    "start": "node build/index.js",
+    "test": "jest"
   }
 }
