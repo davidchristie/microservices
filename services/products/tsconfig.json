@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "build",
+    "rootDir": "source",
+    "strictNullChecks": true
+  }
+}
