@@ -1,6 +1,6 @@
 const faker = require("faker");
 const { UUID_REGEX } = require("../utilities/patterns");
-const { createProduct } = require("./products");
+const { createProduct, getProduct } = require("./products");
 
 describe("creating a new product", () => {
   let name;
@@ -19,6 +19,38 @@ describe("creating a new product", () => {
         id: expect.stringMatching(UUID_REGEX),
         name
       }
+    });
+  });
+
+  describe("when product is queried", () => {
+    beforeEach(async () => {
+      response = await getProduct({
+        id
+      });
+    });
+
+    it("returns the new product", () => {
+      expect(response).toEqual({
+        getProduct: {
+          id: expect.stringMatching(UUID_REGEX),
+          name
+        }
+      });
+    });
+  });
+
+  describe("when products are queried", () => {
+    beforeEach(async () => {
+      response = await getProducts();
+    });
+
+    it("returns the new product", () => {
+      expect(response).toEqual({
+        getProducts: expect.arrayContaining({
+          id: expect.stringMatching(UUID_REGEX),
+          name
+        })
+      });
     });
   });
 });
