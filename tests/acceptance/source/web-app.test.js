@@ -1,5 +1,5 @@
 const faker = require("faker");
-const { createUser } = require("./gateway");
+const { createUser } = require("./gateway/users");
 
 const WEB_APP_HOST = process.env.WEB_APP_HOST || "http://localhost:3000";
 
