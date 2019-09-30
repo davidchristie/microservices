@@ -1,4 +1,4 @@
-const { GraphQLClient } = require("graphql-request");
+import { client } from "./gateway";
 
 const CREATE_TOKEN_MUTATION = `
   mutation($email: String!, $password: String!) {
@@ -14,9 +14,6 @@ const CREATE_USER_MUTATION = `
     }
   }
 `;
-const GATEWAY_HOST = process.env.GATEWAY_HOST || "http://localhost:4000";
-
-const client = new GraphQLClient(`${GATEWAY_HOST}/graphql`);
 
 const createToken = ({ email, password }) => {
   return client.request(CREATE_TOKEN_MUTATION, {
