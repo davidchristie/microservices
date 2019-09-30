@@ -53,4 +53,35 @@ describe("creating a new product", () => {
       });
     });
   });
+
+  describe("when product is deleted", () => {
+    beforeEach(async () => {
+      response = await deleteProduct({
+        id
+      });
+    });
+
+    it("returns the deleted product", () => {
+      expect(response).toEqual({
+        deleteProduct: {
+          id: expect.stringMatching(UUID_REGEX),
+          name
+        }
+      });
+    });
+
+    describe("when product is queried", () => {
+      beforeEach(async () => {
+        response = await getProduct({
+          id
+        });
+      });
+
+      it("returns null", () => {
+        expect(response).toEqual({
+          getProduct: null
+        });
+      });
+    });
+  });
 });
