@@ -49,13 +49,11 @@ services:
     working_dir: /inventory
 
   products:
+    build:
+      context: services/products
     entrypoint: ./entrypoint.sh
     environment:
       - PORT=4000
-    image: node:10-alpine
-    volumes:
-      - ./services/products:/products
-    working_dir: /products
 
   reviews:
     entrypoint: ./entrypoint.sh
