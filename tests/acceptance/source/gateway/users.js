@@ -1,4 +1,4 @@
-import { client } from "./gateway";
+const { client } = require("./gateway");
 
 const CREATE_TOKEN_MUTATION = `
   mutation($email: String!, $password: String!) {

@@ -1,4 +1,4 @@
-import { client } from "./gateway";
+const { client } = require("./gateway");
 
 const CREATE_PRODUCT_MUTATION = `
   mutation($name: String!) {

@@ -1,6 +1,6 @@
 const faker = require("faker");
+const { JWT_REGEX, UUID_REGEX } = require("../utilities/patterns");
 const { createToken, createUser } = require("./gateway");
-import { JWT_REGEX, UUID_REGEX } from "../utilities/patterns";
 
 describe("creating a new user", () => {
   let name;
