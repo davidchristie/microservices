@@ -5,7 +5,7 @@ import resolvers from "./resolvers";
 const typeDefs = gql`
   extend type Mutation {
     createProduct(name: String!): Product!
-    deleteProduct(id: String!): Product!
+    deleteProduct(id: ID!): Product!
   }
 
   extend type Query {
