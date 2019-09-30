@@ -8,7 +8,7 @@ const CREATE_PRODUCT_MUTATION = `
     }
   }
 `;
-const DELETE_ID_MUTATION = `
+const DELETE_PRODUCT_MUTATION = `
   mutation($id: ID!) {
     deleteProduct(id: $id) {
       id
