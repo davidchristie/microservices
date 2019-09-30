@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: [services/accounts]
+        directory: [services/accounts, services/products]
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies

@@ -53,6 +53,9 @@ services:
       context: services/products
     entrypoint: ./entrypoint.sh
     environment:
+      - NEO4J_HOST=bolt://products-neo4j:7687
+      - NEO4J_PASSWORD=products
+      - NEO4J_USER=neo4j
       - PORT=4000
 
   products-neo4j:
