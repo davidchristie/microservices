@@ -62,7 +62,7 @@ describe("creating a new product", () => {
   describe("when product is deleted", () => {
     beforeEach(async () => {
       response = await deleteProduct({
-        id
+        id: response.createProduct.id
       });
     });
 
