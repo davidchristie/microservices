@@ -1,6 +1,11 @@
 const faker = require("faker");
 const { UUID_REGEX } = require("../utilities/patterns");
-const { createProduct, getProduct } = require("./products");
+const {
+  createProduct,
+  deleteProduct,
+  getProduct,
+  getProducts
+} = require("./products");
 
 describe("creating a new product", () => {
   let name;
