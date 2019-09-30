@@ -25,7 +25,7 @@ describe("creating a new product", () => {
   describe("when product is queried", () => {
     beforeEach(async () => {
       response = await getProduct({
-        id
+        id: response.createProduct.id
       });
     });
 
@@ -73,7 +73,7 @@ describe("creating a new product", () => {
     describe("when product is queried", () => {
       beforeEach(async () => {
         response = await getProduct({
-          id
+          id: response.deleteProduct.id
         });
       });
 
