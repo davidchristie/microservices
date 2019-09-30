@@ -9,13 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Start services
-        run: |
-          docker-compose up -d
+        run: docker-compose up -d
+      - name: Install dependencies
+        run: npm install
+        working-directory: tests/acceptance
       - name: Run acceptance tests
-        run: |
-          cd tests/acceptance
-          npm install
-          npm test
+        run: npm test
+        working-directory: tests/acceptance
 
   unit-tests:
     name: Unit Tests
