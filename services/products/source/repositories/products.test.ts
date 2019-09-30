@@ -71,7 +71,7 @@ describe("deleteProduct function", () => {
 describe("getProduct function", () => {
   describe("when product exists", () => {
     let id: string;
-    let product: Product | null;
+    let product: Product;
     let session: any;
 
     beforeEach(async () => {
@@ -108,7 +108,7 @@ describe("getProduct function", () => {
 
   describe("when product does not exist", () => {
     let id: string;
-    let product: Product | null;
+    let getProductError: Error;
     let session: any;
 
     beforeEach(async () => {
@@ -121,11 +121,15 @@ describe("getProduct function", () => {
       (session.run as any).mockReturnValueOnce({
         records: []
       });
-      product = await getProduct({ id });
+      try {
+        await getProduct({ id });
+      } catch (error) {
+        getProductError = error;
+      }
     });
 
     it("returns null", () => {
-      expect(product).toBeNull();
+      expect(getProductError).toEqual(new Error("Product does not exist."));
     });
 
     it("closes the session", () => {
