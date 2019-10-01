@@ -12,7 +12,7 @@ import CustomRouteLayout from "./customRouteLayout";
 import CustomRouteNoLayout from "./customRouteNoLayout";
 // import dataProvider from "./dataProvider";
 import i18nProvider from "./i18nProvider";
-import posts from "./posts";
+import products from "./products";
 import users from "./users";
 import tags from "./tags";
 
@@ -50,7 +50,7 @@ class Application extends Component {
         ]}
       >
         {permissions => [
-          <Resource name="Product" {...posts} />
+          <Resource name="Product" {...products} />
           // <Resource name="comments" {...comments} />,
           // permissions ? <Resource name="users" {...users} /> : null,
           // <Resource name="tags" {...tags} />
