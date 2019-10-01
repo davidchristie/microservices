@@ -1,8 +1,8 @@
 import {
+  allProducts,
   createProduct,
   deleteProduct,
-  getProduct,
-  getProducts
+  getProduct
 } from "./repositories/products";
 
 const resolvers = {
@@ -22,11 +22,17 @@ const resolvers = {
     }
   },
   Query: {
-    async getProduct(_, { id }) {
+    async allProducts() {
+      return allProducts();
+    },
+    async Product(_, { id }) {
       return getProduct({ id });
     },
-    async getProducts() {
-      return getProducts();
+    async _allProductsMeta() {
+      const products = await allProducts();
+      return {
+        count: products.length
+      };
     }
   }
 };

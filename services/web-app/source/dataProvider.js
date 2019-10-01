@@ -1,24 +1,26 @@
-import jsonRestProvider from 'ra-data-fakerest';
+buildGraphQLProvider({ client: myClient });
 
-import data from './data';
-import addUploadFeature from './addUploadFeature';
+// import jsonRestProvider from 'ra-data-fakerest';
 
-const dataProvider = jsonRestProvider(data, true);
-const uploadCapableDataProvider = addUploadFeature(dataProvider);
-const sometimesFailsDataProvider = (type, resource, params) =>
-    new Promise((resolve, reject) => {
-        // add rejection by type or resource here for tests, e.g.
-        // if (type === 'DELETE' && resource === 'posts') {
-        //     return reject('deletion error');
-        // }
-        return resolve(uploadCapableDataProvider(type, resource, params));
-    });
-const delayedDataProvider = (type, resource, params) =>
-    new Promise(resolve =>
-        setTimeout(
-            () => resolve(sometimesFailsDataProvider(type, resource, params)),
-            1000
-        )
-    );
+// import data from './data';
+// import addUploadFeature from './addUploadFeature';
 
-export default delayedDataProvider;
+// const dataProvider = jsonRestProvider(data, true);
+// const uploadCapableDataProvider = addUploadFeature(dataProvider);
+// const sometimesFailsDataProvider = (type, resource, params) =>
+//     new Promise((resolve, reject) => {
+//         // add rejection by type or resource here for tests, e.g.
+//         // if (type === 'DELETE' && resource === 'posts') {
+//         //     return reject('deletion error');
+//         // }
+//         return resolve(uploadCapableDataProvider(type, resource, params));
+//     });
+// const delayedDataProvider = (type, resource, params) =>
+//     new Promise(resolve =>
+//         setTimeout(
+//             () => resolve(sometimesFailsDataProvider(type, resource, params)),
+//             1000
+//         )
+//     );
+
+// export default delayedDataProvider;

@@ -1,10 +1,10 @@
 const faker = require("faker");
 const { UUID_REGEX } = require("../utilities/patterns");
 const {
-  createProduct,
-  deleteProduct,
-  getProduct,
-  getProducts
+  allProductsQuery,
+  createProductMutation,
+  deleteProductMutation,
+  productQuery
 } = require("./products");
 
 describe("creating a new product", () => {
@@ -13,7 +13,7 @@ describe("creating a new product", () => {
 
   beforeEach(async () => {
     name = faker.commerce.product();
-    createProductResponse = await createProduct({
+    createProductResponse = await createProductMutation({
       name
     });
   });
@@ -31,14 +31,14 @@ describe("creating a new product", () => {
     let getProductResponse;
 
     beforeEach(async () => {
-      getProductResponse = await getProduct({
+      getProductResponse = await productQuery({
         id: createProductResponse.createProduct.id
       });
     });
 
     it("returns the new product", () => {
       expect(getProductResponse).toEqual({
-        getProduct: {
+        Product: {
           id: expect.stringMatching(UUID_REGEX),
           name
         }
@@ -47,15 +47,15 @@ describe("creating a new product", () => {
   });
 
   describe("when products are queried", () => {
-    let getProductsResponse;
+    let allProductsResponse;
 
     beforeEach(async () => {
-      getProductsResponse = await getProducts();
+      allProductsResponse = await allProductsQuery();
     });
 
-    it("returns the new product", () => {
-      expect(getProductsResponse).toEqual({
-        getProducts: expect.arrayContaining([
+    it("contains the new product", () => {
+      expect(allProductsResponse).toEqual({
+        allProducts: expect.arrayContaining([
           {
             id: expect.stringMatching(UUID_REGEX),
             name
@@ -69,7 +69,7 @@ describe("creating a new product", () => {
     let deleteProductResponse;
 
     beforeEach(async () => {
-      deleteProductResponse = await deleteProduct({
+      deleteProductResponse = await deleteProductMutation({
         id: createProductResponse.createProduct.id
       });
     });
@@ -85,7 +85,7 @@ describe("creating a new product", () => {
 
     it("throws error when product is queried", async () => {
       return expect(
-        getProduct({
+        productQuery({
           id: deleteProductResponse.deleteProduct.id
         })
       ).rejects.toThrow("Product does not exist.");

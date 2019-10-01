@@ -1,21 +1,29 @@
 import faker from "faker";
 import {
+  allProducts,
   createProduct,
   deleteProduct,
-  getProduct,
-  getProducts
+  getProduct
 } from "./repositories/products";
 import resolvers from "./resolvers";
 
 jest.mock("./repositories/products", () => ({
+  allProducts: jest.fn(),
   createProduct: jest.fn(),
   deleteProduct: jest.fn(),
-  getProduct: jest.fn(),
-  getProducts: jest.fn()
+  getProduct: jest.fn()
 }));
 
 beforeEach(() => {
   jest.resetAllMocks();
+});
+
+describe("allProducts query resolver", () => {
+  it("calls allProducts function", async () => {
+    await resolvers.Query.allProducts();
+    expect(allProducts).toHaveBeenCalledTimes(1);
+    expect(allProducts).toBeCalledWith();
+  });
 });
 
 describe("createProduct mutation resolver", () => {
@@ -44,24 +52,16 @@ describe("deleteProduct mutation resolver", () => {
   });
 });
 
-describe("getProduct query resolver", () => {
+describe("Product query resolver", () => {
   it("calls getProduct function", async () => {
     const id = faker.random.uuid();
-    await resolvers.Query.getProduct(undefined, {
+    await resolvers.Query.Product(undefined, {
       id
     });
     expect(getProduct).toHaveBeenCalledTimes(1);
     expect(getProduct).toBeCalledWith({
       id
     });
-  });
-});
-
-describe("getProducts query resolver", () => {
-  it("calls getProducts function", async () => {
-    await resolvers.Query.getProducts();
-    expect(getProducts).toHaveBeenCalledTimes(1);
-    expect(getProducts).toBeCalledWith();
   });
 });
 
@@ -75,5 +75,24 @@ describe("Product reference resolver", () => {
     expect(getProduct).toBeCalledWith({
       id
     });
+  });
+});
+
+describe("_allProductsMeta query resolver", () => {
+  it("calls allProducts function", async () => {
+    (allProducts as jest.Mock).mockResolvedValueOnce([
+      {
+        id: "PRODUCT_ID_1"
+      },
+      {
+        id: "PRODUCT_ID_2"
+      },
+      {
+        id: "PRODUCT_ID_3"
+      }
+    ]);
+    await resolvers.Query._allProductsMeta();
+    expect(allProducts).toHaveBeenCalledTimes(1);
+    expect(allProducts).toBeCalledWith();
   });
 });
