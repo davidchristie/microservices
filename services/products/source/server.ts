@@ -9,8 +9,13 @@ const typeDefs = gql`
   }
 
   extend type Query {
-    getProduct(id: ID): Product!
-    getProducts: [Product]
+    allProducts: [Product!]!
+    Product(id: ID!): Product!
+    _allProductsMeta: ProductListMeta!
+  }
+
+  type ProductListMeta {
+    count: Int!
   }
 
   type Product @key(fields: "id") {

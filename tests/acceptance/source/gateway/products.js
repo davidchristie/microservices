@@ -1,5 +1,13 @@
 const { client } = require("./gateway");
 
+const ALL_PRODUCTS_QUERY = `
+  query {
+    allProducts {
+      id
+      name
+    }
+  }
+`;
 const CREATE_PRODUCT_MUTATION = `
   mutation($name: String!) {
     createProduct(name: $name) {
@@ -16,49 +24,41 @@ const DELETE_PRODUCT_MUTATION = `
     }
   }
 `;
-const GET_PRODUCT_QUERY = `
+const PRODUCT_QUERY = `
   query($id: ID!) {
-    getProduct(id: $id) {
-      id
-      name
-    }
-  }
-`;
-const GET_PRODUCTS_QUERY = `
-  query {
-    getProducts {
+    Product(id: $id) {
       id
       name
     }
   }
 `;
 
-const createProduct = ({ name }) => {
+const allProductsQuery = () => {
+  return client.request(ALL_PRODUCTS_QUERY);
+};
+
+const createProductMutation = ({ name }) => {
   return client.request(CREATE_PRODUCT_MUTATION, {
     name
   });
 };
 
-const deleteProduct = ({ id }) => {
+const deleteProductMutation = ({ id }) => {
   return client.request(DELETE_PRODUCT_MUTATION, {
     id
   });
 };
 
-const getProduct = ({ id, name }) => {
-  return client.request(GET_PRODUCT_QUERY, {
+const productQuery = ({ id, name }) => {
+  return client.request(PRODUCT_QUERY, {
     id,
     name
   });
 };
 
-const getProducts = () => {
-  return client.request(GET_PRODUCTS_QUERY);
-};
-
 module.exports = {
-  createProduct,
-  deleteProduct,
-  getProduct,
-  getProducts
+  allProductsQuery,
+  createProductMutation,
+  deleteProductMutation,
+  productQuery
 };

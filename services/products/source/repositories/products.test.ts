@@ -5,7 +5,7 @@ import {
   createProduct,
   deleteProduct,
   getProduct,
-  getProducts
+  allProducts
 } from "./products";
 
 let driver: Driver;
@@ -128,7 +128,7 @@ describe("getProduct function", () => {
       }
     });
 
-    it("returns null", () => {
+    it("throws an error", () => {
       expect(getProductError).toEqual(new Error("Product does not exist."));
     });
 
@@ -138,7 +138,7 @@ describe("getProduct function", () => {
   });
 });
 
-describe("getProducts function", () => {
+describe("allProducts function", () => {
   let products: Product[];
   let session: any;
 
@@ -173,7 +173,7 @@ describe("getProducts function", () => {
         }
       ]
     });
-    products = await getProducts();
+    products = await allProducts();
   });
 
   it("returns a list of products", () => {

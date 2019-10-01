@@ -4,6 +4,15 @@ import { Product } from "../types";
 
 const driver = createDriver();
 
+export async function allProducts(): Promise<Product[]> {
+  const session = driver.session();
+  const result = await session.run("MATCH (p:Product) RETURN p AS products");
+  session.close();
+  return result.records.map(record => {
+    return record.get("products").properties;
+  });
+}
+
 export async function createProduct({ name }): Promise<Product> {
   const id = uuid();
   const newProduct: Product = {
@@ -41,13 +50,4 @@ export async function getProduct({ id }): Promise<Product> {
     throw new Error("Product does not exist.");
   }
   return result.records[0].get("product").properties;
-}
-
-export async function getProducts(): Promise<Product[]> {
-  const session = driver.session();
-  const result = await session.run("MATCH (p:Product) RETURN p AS products");
-  session.close();
-  return result.records.map(record => {
-    return record.get("products").properties;
-  });
 }
