@@ -5,22 +5,16 @@ import React, { Children, Fragment, cloneElement } from "react";
 import lodashGet from "lodash/get";
 import { unparse as convertToCSV } from "papaparse/papaparse.min";
 import {
-  BooleanField,
   BulkDeleteButton,
-  ChipField,
   Datagrid,
-  DateField,
   downloadCSV,
   EditButton,
   Filter,
   List,
-  NumberField,
-  ReferenceArrayField,
   Responsive,
   SearchInput,
   ShowButton,
   SimpleList,
-  SingleFieldList,
   TextField,
   TextInput,
   translate
@@ -45,12 +39,8 @@ const ProductFilter = props => (
   </Filter>
 );
 
-const exporter = posts => {
-  const data = posts.map(post => ({
-    ...post,
-    backlinks: lodashGet(post, "backlinks", []).map(backlink => backlink.url)
-  }));
-  return downloadCSV(convertToCSV({ data }), "posts");
+const exporter = products => {
+  return downloadCSV(convertToCSV({ data: products }), "products");
 };
 
 const styles = theme => ({
@@ -59,13 +49,7 @@ const styles = theme => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap"
-  },
-  hiddenOnSmallScreens: {
-    [theme.breakpoints.down("md")]: {
-      display: "none"
-    }
-  },
-  publishedAt: { fontStyle: "italic" }
+  }
 });
 
 const ProductListBulkActions = props => (
@@ -102,47 +86,20 @@ const ProductList = withStyles(styles)(({ classes, ...props }) => (
   <List
     {...props}
     bulkActionButtons={<ProductListBulkActions />}
-    filters={<ProductFilter />}
-    sort={{ field: "published_at", order: "DESC" }}
     exporter={exporter}
+    filters={<ProductFilter />}
+    sort={{ field: "name", order: "ASC" }}
   >
     <Responsive
       small={
         <SimpleList
           primaryText={record => record.name}
-          secondaryText={record => `${record.views} views`}
-          tertiaryText={record =>
-            new Date(record.published_at).toLocaleDateString()
-          }
+          secondaryText={record => record.id}
         />
       }
       medium={
         <Datagrid rowClick={rowClick} expand={<ProductPanel />}>
-          <TextField source="id" />
           <TextField source="name" cellClassName={classes.name} />
-          <DateField
-            source="published_at"
-            cellClassName={classes.publishedAt}
-          />
-
-          <BooleanField
-            source="commentable"
-            label="resources.posts.fields.commentable_short"
-            sortable={false}
-          />
-          <NumberField source="views" />
-          <ReferenceArrayField
-            label="Tags"
-            reference="tags"
-            source="tags"
-            sortBy="tags.name"
-            cellClassName={classes.hiddenOnSmallScreens}
-            headerClassName={classes.hiddenOnSmallScreens}
-          >
-            <SingleFieldList>
-              <ChipField source="name" />
-            </SingleFieldList>
-          </ReferenceArrayField>
           <ProductListActionToolbar>
             <EditButton />
             <ShowButton />
