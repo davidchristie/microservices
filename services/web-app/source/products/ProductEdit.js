@@ -30,7 +30,7 @@ import {
   number,
   required
 } from "react-admin"; // eslint-disable-line import/no-unresolved
-import ProductTitle from "./ProductTitle";
+import ProductName from "./ProductName";
 
 const EditActions = ({
   basePath,
@@ -48,7 +48,7 @@ const EditActions = ({
 );
 
 const ProductEdit = props => (
-  <Edit title={<ProductTitle />} actions={<EditActions />} {...props}>
+  <Edit title={<ProductName />} actions={<EditActions />} {...props}>
     <TabbedForm defaultValue={{ average_note: 0 }}>
       <FormTab label="product.form.summary">
         <DisabledInput source="id" />

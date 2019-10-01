@@ -1,3 +1,4 @@
+import Button from "@material-ui/core/Button";
 import { ShowController } from "ra-core";
 import React from "react";
 import {
@@ -19,10 +20,9 @@ import {
   TabbedShowLayout,
   TextField,
   UrlField
-} from "react-admin"; // eslint-disable-line import/no-unresolved
+} from "react-admin";
 import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import ProductTitle from "./ProductTitle";
+import ProductName from "./ProductName";
 
 const CreateRelatedComment = ({ record }) => (
   <Button
@@ -37,7 +37,7 @@ const CreateRelatedComment = ({ record }) => (
 );
 
 const ProductShow = props => (
-  <ShowController title={<ProductTitle />} {...props}>
+  <ShowController title={<ProductName />} {...props}>
     {controllerProps => (
       <ShowView {...props} {...controllerProps}>
         <TabbedShowLayout>
