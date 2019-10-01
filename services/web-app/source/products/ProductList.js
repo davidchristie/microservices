@@ -20,7 +20,6 @@ import {
   translate
 } from "react-admin"; // eslint-disable-line import/no-unresolved
 
-import ResetViewsButton from "./ResetViewsButton";
 export const ProductIcon = BookIcon;
 
 const QuickFilter = translate(({ label, translate }) => (
@@ -54,7 +53,6 @@ const styles = theme => ({
 
 const ProductListBulkActions = props => (
   <Fragment>
-    <ResetViewsButton {...props} />
     <BulkDeleteButton {...props} />
   </Fragment>
 );
