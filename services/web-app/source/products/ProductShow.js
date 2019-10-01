@@ -41,7 +41,7 @@ const ProductShow = props => (
     {controllerProps => (
       <ShowView {...props} {...controllerProps}>
         <TabbedShowLayout>
-          <Tab label="product.form.summary">
+          <Tab label="Summary">
             <TextField source="id" />
             <TextField source="title" />
             {controllerProps.record &&
@@ -56,7 +56,7 @@ const ProductShow = props => (
               </Datagrid>
             </ArrayField>
           </Tab>
-          <Tab label="product.form.body">
+          <Tab label="Body">
             <RichTextField
               source="body"
               stripTags={false}
@@ -64,7 +64,7 @@ const ProductShow = props => (
               addLabel={false}
             />
           </Tab>
-          <Tab label="product.form.miscellaneous">
+          <Tab label="Miscellaneous">
             <ReferenceArrayField reference="tags" source="tags">
               <SingleFieldList>
                 <ChipField source="name" />
@@ -83,7 +83,7 @@ const ProductShow = props => (
             <TextField source="views" />
             <CloneButton />
           </Tab>
-          <Tab label="product.form.comments">
+          <Tab label="Comments">
             <ReferenceManyField
               addLabel={false}
               reference="comments"
