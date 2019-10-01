@@ -1,8 +1,6 @@
 import BookIcon from "@material-ui/icons/Book";
-import Chip from "@material-ui/core/Chip";
 import { withStyles } from "@material-ui/core/styles";
 import React, { Children, Fragment, cloneElement } from "react";
-import lodashGet from "lodash/get";
 import { unparse as convertToCSV } from "papaparse/papaparse.min";
 import {
   BulkDeleteButton,
@@ -16,25 +14,15 @@ import {
   ShowButton,
   SimpleList,
   TextField,
-  TextInput,
-  translate
-} from "react-admin"; // eslint-disable-line import/no-unresolved
+  TextInput
+} from "react-admin";
 
 export const ProductIcon = BookIcon;
-
-const QuickFilter = translate(({ label, translate }) => (
-  <Chip style={{ marginBottom: 8 }} label={translate(label)} />
-));
 
 const ProductFilter = props => (
   <Filter {...props}>
     <SearchInput source="q" alwaysOn />
-    <TextInput source="name" defaultValue="Qui tempore rerum et voluptates" />
-    <QuickFilter
-      label="resources.posts.fields.commentable"
-      source="commentable"
-      defaultValue
-    />
+    <TextInput source="name" defaultValue="" />
   </Filter>
 );
 
@@ -72,12 +60,11 @@ const rowClick = (id, basePath, record) => {
   if (record.commentable) {
     return "edit";
   }
-
   return "show";
 };
 
 const ProductPanel = ({ id, record, resource }) => (
-  <div dangerouslySetInnerHTML={{ __html: record.body }} />
+  <div>TODO: Expanded product panel.</div>
 );
 
 const ProductList = withStyles(styles)(({ classes, ...props }) => (
