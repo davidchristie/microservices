@@ -36,7 +36,7 @@ const QuickFilter = translate(({ label, translate }) => (
 const ProductFilter = props => (
   <Filter {...props}>
     <SearchInput source="q" alwaysOn />
-    <TextInput source="title" defaultValue="Qui tempore rerum et voluptates" />
+    <TextInput source="name" defaultValue="Qui tempore rerum et voluptates" />
     <QuickFilter
       label="resources.posts.fields.commentable"
       source="commentable"
@@ -54,7 +54,7 @@ const exporter = posts => {
 };
 
 const styles = theme => ({
-  title: {
+  name: {
     maxWidth: "20em",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -109,7 +109,7 @@ const ProductList = withStyles(styles)(({ classes, ...props }) => (
     <Responsive
       small={
         <SimpleList
-          primaryText={record => record.title}
+          primaryText={record => record.name}
           secondaryText={record => `${record.views} views`}
           tertiaryText={record =>
             new Date(record.published_at).toLocaleDateString()
@@ -119,7 +119,7 @@ const ProductList = withStyles(styles)(({ classes, ...props }) => (
       medium={
         <Datagrid rowClick={rowClick} expand={<ProductPanel />}>
           <TextField source="id" />
-          <TextField source="title" cellClassName={classes.title} />
+          <TextField source="name" cellClassName={classes.name} />
           <DateField
             source="published_at"
             cellClassName={classes.publishedAt}
