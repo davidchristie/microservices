@@ -80,29 +80,15 @@ const getDefaultDate = () => new Date();
 const ProductCreate = ({ permissions, ...props }) => (
   <Create {...props}>
     <SimpleForm
-      toolbar={<ProductCreateToolbar />}
       defaultValue={{ average_note: 0 }}
-      validate={values => {
-        const errors = {};
-        ["title", "teaser"].forEach(field => {
-          if (!values[field]) {
-            errors[field] = ["Required field"];
-          }
-        });
-
-        if (values.average_note < 0 || values.average_note > 5) {
-          errors.average_note = ["Should be between 0 and 5"];
-        }
-
-        return errors;
-      }}
+      toolbar={<ProductCreateToolbar />}
     >
-      <TextInput autoFocus source="title" />
+      <TextInput autoFocus source="name" validate={[required()]} />
       <LongTextInput source="teaser" />
-      <RichTextInput source="body" validate={[required()]} />
+      <RichTextInput source="body" />
       <FormDataConsumer>
         {({ formData, ...rest }) =>
-          formData.title && (
+          formData.name && (
             <NumberInput source="average_note" defaultValue={5} {...rest} />
           )
         }
