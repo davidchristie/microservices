@@ -77,3 +77,22 @@ describe("Product reference resolver", () => {
     });
   });
 });
+
+describe("_allProductsMeta query resolver", () => {
+  it("calls allProducts function", async () => {
+    (allProducts as jest.Mock).mockResolvedValueOnce([
+      {
+        id: "PRODUCT_ID_1"
+      },
+      {
+        id: "PRODUCT_ID_2"
+      },
+      {
+        id: "PRODUCT_ID_3"
+      }
+    ]);
+    await resolvers.Query._allProductsMeta();
+    expect(allProducts).toHaveBeenCalledTimes(1);
+    expect(allProducts).toBeCalledWith();
+  });
+});
