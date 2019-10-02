@@ -3,6 +3,8 @@ version: "3.7"
 services:
   accounts:
     command: npm run api:development
+    depends_on:
+      - accounts-neo4j
     environment:
       - JWT_SECRET=secret
       - NEO4J_HOST=bolt://accounts-neo4j:7687
@@ -51,6 +53,8 @@ services:
 
   products:
     command: npm run api:development
+    depends_on:
+      - products-neo4j
     environment:
       - NEO4J_HOST=bolt://products-neo4j:7687
       - NEO4J_PASSWORD=products
