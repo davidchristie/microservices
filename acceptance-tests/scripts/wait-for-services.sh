@@ -28,7 +28,7 @@ function wait-for() {
   healthcheck=$1
 
   attempt_counter=0
-  max_attempts=5
+  max_attempts=10
 
   until $($healthcheck) ; do
 
