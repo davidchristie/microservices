@@ -1,3 +1,3 @@
 #!/bin/sh
 
-npm api:production
+npm run api:production
