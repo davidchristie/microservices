@@ -21,7 +21,7 @@ jobs:
         working-directory: acceptance-tests
     strategy:
       matrix:
-        directory: [environments/development, environments/production]
+        directory: [environments/production]
 
   unit-tests:
     name: Unit Tests
