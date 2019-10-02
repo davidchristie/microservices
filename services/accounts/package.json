@@ -16,7 +16,9 @@
     "@types/uuid": "^3.4.5",
     "faker": "^4.1.0",
     "jest": "^24.9.0",
+    "nodemon": "^1.19.3",
     "ts-jest": "^24.1.0",
+    "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "jest": {
@@ -35,10 +37,21 @@
     "testEnvironment": "node"
   },
   "name": "accounts",
+  "nodemonConfig": {
+    "exec": "ts-node ./source/index.ts",
+    "ext": "ts",
+    "ignore": [
+      "**/*.test.ts"
+    ],
+    "watch": [
+      "source"
+    ]
+  },
   "private": true,
   "scripts": {
+    "api:development": "nodemon",
+    "api:production": "node build/index.js",
     "build": "tsc",
-    "start": "node build/index.js",
     "test": "jest"
   }
 }

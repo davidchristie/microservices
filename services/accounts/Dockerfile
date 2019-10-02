@@ -13,3 +13,5 @@ COPY tsconfig.json .
 RUN npm run build
 
 COPY entrypoint.sh .
+
+ENTRYPOINT ["./entrypoint.sh"]
