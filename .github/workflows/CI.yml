@@ -9,7 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Start services
-        run: docker-compose up -d
+        run: |
+          docker-compose up -d
+          docker-compose logs
         working-directory: ${{ matrix.directory }}
       - name: Install test dependencies
         run: npm install

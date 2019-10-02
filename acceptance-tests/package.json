@@ -10,7 +10,7 @@
   "jest": {
     "preset": "jest-puppeteer"
   },
-  "name": "acceptance",
+  "name": "acceptance-tests",
   "private": true,
   "scripts": {
     "test": "npm run wait-for-services && jest",
