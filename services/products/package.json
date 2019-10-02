@@ -46,7 +46,7 @@
   },
   "private": true,
   "scripts": {
-    "api:development": "nodemon",
+    "api:development": "npm install && nodemon",
     "api:production": "node build/index.js",
     "build": "tsc",
     "test": "jest"
