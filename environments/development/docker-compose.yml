@@ -15,7 +15,7 @@ services:
       - NODE_ENV=development
       - PORT=4000
     volumes:
-      - ../../services/accounts:/accounts
+      - ../../services/accounts/source:/accounts/source
 
   accounts-neo4j:
     environment:
@@ -41,7 +41,7 @@ services:
       - 4000:4000
     restart: always
     volumes:
-      - ../../services/gateway:/gateway
+      - ../../services/gateway/source:/gateway/source
 
   inventory:
     build:
@@ -50,7 +50,7 @@ services:
     environment:
       - PORT=4000
     volumes:
-      - ../../services/inventory:/inventory
+      - ../../services/inventory/source:/inventory/source
 
   products:
     build:
@@ -65,7 +65,7 @@ services:
       - NODE_ENV=development
       - PORT=4000
     volumes:
-      - ../../services/products:/products
+      - ../../services/products/source:/products/source
 
   products-neo4j:
     environment:
@@ -82,7 +82,7 @@ services:
     environment:
       - PORT=4000
     volumes:
-      - ../../services/reviews:/reviews
+      - ../../services/reviews/source:/reviews/source
 
   web-app:
     command: npm start
@@ -92,5 +92,5 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ../../services/web-app:/web-app
+      - ../../services/web-app/source:/web-app/source
     working_dir: /web-app
