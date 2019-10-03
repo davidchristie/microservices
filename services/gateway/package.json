@@ -8,7 +8,6 @@
   "name": "gateway",
   "private": true,
   "scripts": {
-    "start": "npm run wait-for-services && node index.js",
-    "wait-for-services": "./scripts/wait-for-services.sh"
+    "start": "node source/index.js"
   }
 }
