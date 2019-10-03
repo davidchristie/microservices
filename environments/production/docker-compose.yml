@@ -108,5 +108,6 @@ services:
       args:
         - GATEWAY_HOST=http://localhost:4000
       context: ../../services/web-app
+      dockerfile: production.Dockerfile
     ports:
       - 3000:80
