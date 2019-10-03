@@ -85,8 +85,10 @@ services:
       - ../../services/reviews/source:/reviews/source
 
   web-app:
+    build:
+      context: ../../services/web-app
+      dockerfile: development.Dockerfile
     command: npm start
-    image: node:10-alpine
     ports:
       - 3000:3000
     volumes:
