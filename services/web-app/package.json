@@ -45,7 +45,7 @@
   "private": true,
   "scripts": {
     "build": "webpack-cli --color --mode production --hide-modules true",
-    "start": "webpack-dev-server --progress --color --hot --watch --mode development",
-    "test": "jest"
+    "test": "jest",
+    "ui:development": "webpack-dev-server --color --hot --mode development --progress --watch"
   }
 }

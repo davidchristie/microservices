@@ -88,9 +88,12 @@ services:
     build:
       context: ../../services/web-app
       dockerfile: development.Dockerfile
-    command: npm start
+    command: npm run ui:development
+    environment:
+      - PORT=80
+    image: node:10
     ports:
-      - 3000:3000
+      - 3000:80
     volumes:
-      - ../../services/web-app/source:/web-app/source
+      - ../../services/web-app:/web-app
     working_dir: /web-app
