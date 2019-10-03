@@ -8,6 +8,7 @@
   "name": "gateway",
   "private": true,
   "scripts": {
-    "start": "node source/index.js"
+    "api:development": "node source/index.js",
+    "api:production": "node source/index.js"
   }
 }

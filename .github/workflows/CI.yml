@@ -8,9 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Start services
+      - name: Build service images
+        run: docker-compose build
+        working-directory: ${{ matrix.directory }}
+      - name: Start service containers
         run: |
           docker-compose up -d
+          docker-compose logs
           docker-compose ps
         working-directory: ${{ matrix.directory }}
       - name: Install test dependencies

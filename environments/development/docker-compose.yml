@@ -28,12 +28,12 @@ services:
   gateway:
     build:
       context: ../../services/gateway
+    command: npm run api:development
     depends_on:
       - accounts
       - inventory
       - products
       - reviews
-    entrypoint: ./entrypoint.sh
     environment:
       - JWT_SECRET=secret
       - PORT=4000
@@ -46,7 +46,7 @@ services:
   inventory:
     build:
       context: ../../services/inventory
-    entrypoint: ./entrypoint.sh
+    command: npm run api:development
     environment:
       - PORT=4000
     volumes:
@@ -78,6 +78,7 @@ services:
   reviews:
     build:
       context: ../../services/reviews
+    command: npm run api:development
     environment:
       - PORT=4000
     volumes:

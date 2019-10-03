@@ -8,6 +8,3 @@ COPY package.json .
 RUN npm ci
 
 COPY source source
-COPY entrypoint.sh .
-
-ENTRYPOINT [ "./entrypoint.sh" ]
