@@ -3,25 +3,18 @@
 set -e
 
 function graphql-healthcheck() {
-  service-url=$1
-
   curl \
-    --header "Content-Type: application/json" \
-    --request POST \
-    --data '{ "query": "{ __schema { types { name } } }" }' \
-    --output /dev/null \
     --fail \
+    --output /dev/null \
     --silent \
-    $service-url
+    $1
 }
 
 function wait-for() {
-  service-url=$1
-
   attempt_counter=0
-  max_attempts=10
+  max_attempts=1
 
-  until $(graphql-healthcheck $service-url) ; do
+  until $(graphql-healthcheck $1) ; do
 
     if [ ${attempt_counter} -eq ${max_attempts} ];then
       echo "Max attempts reached"
@@ -35,13 +28,13 @@ function wait-for() {
 }
 
 echo "Wait for accounts"
-wait-for http://accounts:4000
+wait-for http://accounts:4000/.well-known/apollo/server-health
 
 echo "Wait for inventory"
-wait-for http://inventory:4000
+wait-for http://inventory:4000/.well-known/apollo/server-health
 
 echo "Wait for products"
-wait-for http://products:4000
+wait-for http://products:4000/.well-known/apollo/server-health
 
 echo "Wait for reviews"
-wait-for http://reviews:4000
+wait-for http://reviews:4000/.well-known/apollo/server-health
