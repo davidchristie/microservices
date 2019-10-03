@@ -8,26 +8,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Start services
-        run: docker-compose up -d
-      - name: Install dependencies
-        run: npm install
-        working-directory: tests/acceptance
+      - name: Build service images
+        run: docker-compose build
+        working-directory: ${{ matrix.directory }}
+      - name: Start service containers
+        run: |
+          docker-compose up -d
+          docker-compose logs
+          docker-compose ps
+        working-directory: ${{ matrix.directory }}
+      - name: Install test dependencies
+        run: npm ci
+        working-directory: acceptance-tests
+      - name: Wait for services to be ready
+        run: npm run wait-for-services
+        working-directory: acceptance-tests
       - name: Run acceptance tests
         run: npm test -- --verbose
-        working-directory: tests/acceptance
+        working-directory: acceptance-tests
+    strategy:
+      matrix:
+        directory: [environments/development, environments/production]
 
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        directory: [services/accounts, services/products]
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: ${{ matrix.directory }}
       - name: Run unit tests
         run: npm test -- --coverage --verbose
         working-directory: ${{ matrix.directory }}
+    strategy:
+      matrix:
+        directory: [services/accounts, services/products]

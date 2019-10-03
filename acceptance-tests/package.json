@@ -10,9 +10,10 @@
   "jest": {
     "preset": "jest-puppeteer"
   },
-  "name": "acceptance",
+  "name": "acceptance-tests",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "wait-for-services": "./scripts/wait-for-services.sh"
   }
 }

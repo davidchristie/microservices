@@ -1,0 +1,99 @@
+version: "3.7"
+
+services:
+  accounts:
+    build:
+      context: ../../services/accounts
+    command: npm run api:development
+    depends_on:
+      - accounts-neo4j
+    environment:
+      - JWT_SECRET=secret
+      - NEO4J_HOST=bolt://accounts-neo4j:7687
+      - NEO4J_PASSWORD=accounts
+      - NEO4J_USERNAME=neo4j
+      - NODE_ENV=development
+      - PORT=4000
+    volumes:
+      - ../../services/accounts/source:/accounts/source
+
+  accounts-neo4j:
+    environment:
+      - "NEO4J_AUTH=neo4j/accounts"
+    image: neo4j:3.5
+    # ports:
+    #   - "7474:7474"
+    #   - "7687:7687"
+
+  gateway:
+    build:
+      context: ../../services/gateway
+    command: npm run api:development
+    depends_on:
+      - accounts
+      - inventory
+      - products
+      - reviews
+    environment:
+      - JWT_SECRET=secret
+      - PORT=4000
+    ports:
+      - 4000:4000
+    restart: always
+    volumes:
+      - ../../services/gateway/source:/gateway/source
+
+  inventory:
+    build:
+      context: ../../services/inventory
+    command: npm run api:development
+    environment:
+      - PORT=4000
+    volumes:
+      - ../../services/inventory/source:/inventory/source
+
+  products:
+    build:
+      context: ../../services/products
+    command: npm run api:development
+    depends_on:
+      - products-neo4j
+    environment:
+      - NEO4J_HOST=bolt://products-neo4j:7687
+      - NEO4J_PASSWORD=products
+      - NEO4J_USERNAME=neo4j
+      - NODE_ENV=development
+      - PORT=4000
+    volumes:
+      - ../../services/products/source:/products/source
+
+  products-neo4j:
+    environment:
+      - "NEO4J_AUTH=neo4j/products"
+    image: neo4j:3.5
+    # ports:
+    #   - "7474:7474"
+    #   - "7687:7687"
+
+  reviews:
+    build:
+      context: ../../services/reviews
+    command: npm run api:development
+    environment:
+      - PORT=4000
+    volumes:
+      - ../../services/reviews/source:/reviews/source
+
+  web-app:
+    build:
+      context: ../../services/web-app
+      dockerfile: development.Dockerfile
+    command: npm run ui:development
+    environment:
+      - PORT=80
+    image: node:10
+    ports:
+      - 3000:80
+    volumes:
+      - ../../services/web-app/source:/web-app/source
+    working_dir: /web-app

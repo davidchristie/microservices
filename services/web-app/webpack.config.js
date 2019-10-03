@@ -5,12 +5,11 @@ const path = require("path");
 
 module.exports = {
   devServer: {
-    port: 3000,
-    stats: {
-      children: false,
-      chunks: false,
-      modules: false
-    }
+    compress: true,
+    contentBase: path.join(__dirname, "build"),
+    historyApiFallback: true,
+    host: "0.0.0.0",
+    port: process.env.PORT
   },
   devtool: "cheap-module-source-map",
   entry: "./source/index.js",
