@@ -13,7 +13,7 @@
   "name": "acceptance-tests",
   "private": true,
   "scripts": {
-    "test": "npm run wait-for-services && jest",
+    "test": "jest",
     "wait-for-services": "./scripts/wait-for-services.sh"
   }
 }

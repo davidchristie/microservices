@@ -20,6 +20,9 @@ jobs:
       - name: Install test dependencies
         run: npm ci
         working-directory: acceptance-tests
+      - name: Wait for services to be ready
+        run: npm run wait-for-services
+        working-directory: acceptance-tests
       - name: Run acceptance tests
         run: npm test -- --verbose
         working-directory: acceptance-tests
