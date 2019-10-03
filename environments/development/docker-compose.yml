@@ -2,6 +2,8 @@ version: "3.7"
 
 services:
   accounts:
+    build:
+      context: ../../services/accounts
     command: npm run api:development
     depends_on:
       - accounts-neo4j
@@ -12,10 +14,8 @@ services:
       - NEO4J_USERNAME=neo4j
       - NODE_ENV=development
       - PORT=4000
-    image: node:10-alpine
     volumes:
       - ../../services/accounts:/accounts
-    working_dir: /accounts
 
   accounts-neo4j:
     environment:
@@ -26,6 +26,8 @@ services:
     #   - "7687:7687"
 
   gateway:
+    build:
+      context: ../../services/gateway
     depends_on:
       - accounts
       - inventory
@@ -35,13 +37,11 @@ services:
     environment:
       - JWT_SECRET=secret
       - PORT=4000
-    image: node:10-alpine
     ports:
       - 4000:4000
     restart: always
     volumes:
       - ../../services/gateway:/gateway
-    working_dir: /gateway
 
   inventory:
     build:
@@ -49,12 +49,12 @@ services:
     entrypoint: ./entrypoint.sh
     environment:
       - PORT=4000
-    image: node:10-alpine
     volumes:
       - ../../services/inventory:/inventory
-    working_dir: /inventory
 
   products:
+    build:
+      context: ../../services/products
     command: npm run api:development
     depends_on:
       - products-neo4j
@@ -64,10 +64,8 @@ services:
       - NEO4J_USERNAME=neo4j
       - NODE_ENV=development
       - PORT=4000
-    image: node:10-alpine
     volumes:
       - ../../services/products:/products
-    working_dir: /products
 
   products-neo4j:
     environment:
@@ -78,13 +76,12 @@ services:
     #   - "7687:7687"
 
   reviews:
-    entrypoint: ./entrypoint.sh
+    build:
+      context: ../../services/reviews
     environment:
       - PORT=4000
-    image: node:10-alpine
     volumes:
       - ../../services/reviews:/reviews
-    working_dir: /reviews
 
   web-app:
     command: npm start
