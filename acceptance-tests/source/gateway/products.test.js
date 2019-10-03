@@ -50,7 +50,10 @@ describe("creating a new product", () => {
     let allProductsResponse;
 
     beforeEach(async () => {
-      allProductsResponse = await allProductsQuery();
+      allProductsResponse = await allProductsQuery({
+        sortField: "name",
+        sortOrder: "ASC"
+      });
     });
 
     it("contains the new product", () => {
