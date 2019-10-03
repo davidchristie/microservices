@@ -3,13 +3,22 @@ import { ApolloServer, gql } from "apollo-server";
 import resolvers from "./resolvers";
 
 const typeDefs = gql`
+  enum ProductField {
+    name
+  }
+
+  enum SortOrder {
+    ASC
+    DESC
+  }
+
   extend type Mutation {
     createProduct(name: String!): Product!
     deleteProduct(id: ID!): Product!
   }
 
   extend type Query {
-    allProducts: [Product!]!
+    allProducts(sortField: ProductField!, sortOrder: SortOrder!): [Product!]!
     Product(id: ID!): Product!
     _allProductsMeta: ProductListMeta!
   }

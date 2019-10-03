@@ -90,10 +90,10 @@ services:
       dockerfile: development.Dockerfile
     command: npm run ui:development
     environment:
-      - PORT=80
+      - PORT=3000
     image: node:10
     ports:
-      - 3000:80
+      - 3000:3000
     volumes:
       - ../../services/web-app/source:/web-app/source
     working_dir: /web-app

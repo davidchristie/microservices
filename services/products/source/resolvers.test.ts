@@ -20,9 +20,10 @@ beforeEach(() => {
 
 describe("allProducts query resolver", () => {
   it("calls allProducts function", async () => {
-    await resolvers.Query.allProducts();
+    const input = { sortField: "name", sortOrder: "ASC" };
+    await resolvers.Query.allProducts({}, input);
     expect(allProducts).toHaveBeenCalledTimes(1);
-    expect(allProducts).toBeCalledWith();
+    expect(allProducts).toBeCalledWith(input);
   });
 });
 

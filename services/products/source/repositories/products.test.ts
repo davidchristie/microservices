@@ -22,6 +22,79 @@ jest.mock("../neo4j", () => {
   };
 });
 
+describe("allProducts function", () => {
+  describe("with valid input", () => {
+    let products: Product[];
+    let session: any;
+
+    beforeEach(async () => {
+      session = {
+        close: jest.fn(),
+        run: jest.fn()
+      };
+      (driver.session as any).mockReturnValueOnce(session);
+      (session.run as any).mockReturnValueOnce({
+        records: [
+          {
+            get: () => ({
+              properties: {
+                id: faker.random.uuid()
+              }
+            })
+          },
+          {
+            get: () => ({
+              properties: {
+                id: faker.random.uuid()
+              }
+            })
+          },
+          {
+            get: () => ({
+              properties: {
+                id: faker.random.uuid()
+              }
+            })
+          }
+        ]
+      });
+      products = await allProducts();
+    });
+
+    it("returns a list of products", () => {
+      expect(products).toEqual([
+        {
+          id: expect.any(String)
+        },
+        {
+          id: expect.any(String)
+        },
+        {
+          id: expect.any(String)
+        }
+      ]);
+    });
+
+    it("closes the session", () => {
+      expect(session.close).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("throws error if sortField is invalid", async () => {
+    const sortField: any = "invalid_field";
+    expect(allProducts({ sortField })).rejects.toThrowError(
+      new Error("Invalid product field: " + sortField)
+    );
+  });
+
+  it("throws error if sortOrder is invalid", () => {
+    const sortOrder: any = "invalid_order";
+    expect(allProducts({ sortOrder })).rejects.toThrowError(
+      new Error("Invalid sort order: " + sortOrder)
+    );
+  });
+});
+
 describe("createProduct function", () => {
   let session: any;
   let name: string;
@@ -135,62 +208,5 @@ describe("getProduct function", () => {
     it("closes the session", () => {
       expect(session.close).toHaveBeenCalledTimes(1);
     });
-  });
-});
-
-describe("allProducts function", () => {
-  let products: Product[];
-  let session: any;
-
-  beforeEach(async () => {
-    session = {
-      close: jest.fn(),
-      run: jest.fn()
-    };
-    (driver.session as any).mockReturnValueOnce(session);
-    (session.run as any).mockReturnValueOnce({
-      records: [
-        {
-          get: () => ({
-            properties: {
-              id: faker.random.uuid()
-            }
-          })
-        },
-        {
-          get: () => ({
-            properties: {
-              id: faker.random.uuid()
-            }
-          })
-        },
-        {
-          get: () => ({
-            properties: {
-              id: faker.random.uuid()
-            }
-          })
-        }
-      ]
-    });
-    products = await allProducts();
-  });
-
-  it("returns a list of products", () => {
-    expect(products).toEqual([
-      {
-        id: expect.any(String)
-      },
-      {
-        id: expect.any(String)
-      },
-      {
-        id: expect.any(String)
-      }
-    ]);
-  });
-
-  it("closes the session", () => {
-    expect(session.close).toHaveBeenCalledTimes(1);
   });
 });

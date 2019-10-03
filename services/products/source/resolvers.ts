@@ -22,8 +22,8 @@ const resolvers = {
     }
   },
   Query: {
-    async allProducts() {
-      return allProducts();
+    async allProducts(_, { sortField, sortOrder }) {
+      return allProducts({ sortField, sortOrder });
     },
     async Product(_, { id }) {
       return getProduct({ id });

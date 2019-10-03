@@ -2,11 +2,39 @@ import uuid from "uuid/v4";
 import { createDriver } from "../neo4j";
 import { Product } from "../types";
 
+interface AllProductInput {
+  sortField?: "name";
+  sortOrder?: "ASC" | "DESC";
+}
+
+const PRODUCT_FIELDS = ["name"];
+
+const SORT_ORDERS = ["ASC", "DESC"];
+
 const driver = createDriver();
 
-export async function allProducts(): Promise<Product[]> {
+function validateProductField(field: string): void {
+  if (!PRODUCT_FIELDS.includes(field)) {
+    throw new Error("Invalid product field: " + field);
+  }
+}
+
+function validateSortOrder(order): void {
+  if (!SORT_ORDERS.includes(order)) {
+    throw new Error("Invalid sort order: " + order);
+  }
+}
+
+export async function allProducts(
+  input: AllProductInput = {}
+): Promise<Product[]> {
+  const { sortField = "name", sortOrder = "ASC" } = input;
+  validateProductField(sortField);
+  validateSortOrder(sortOrder);
   const session = driver.session();
-  const result = await session.run("MATCH (p:Product) RETURN p AS products");
+  const result = await session.run(
+    `MATCH (p:Product) RETURN p AS products ORDER BY p.${sortField} ${sortOrder}`
+  );
   session.close();
   return result.records.map(record => {
     return record.get("products").properties;
