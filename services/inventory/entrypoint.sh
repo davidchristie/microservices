@@ -1,4 +1,5 @@
 #!/bin/sh
 
-npm ci
+set -e
+
 npm start
