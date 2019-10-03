@@ -55,6 +55,8 @@ services:
     working_dir: /gateway
 
   inventory:
+    build:
+      context: ../../services/inventory
     entrypoint: ./entrypoint.sh
     environment:
       - PORT=4000

@@ -38,11 +38,14 @@ services:
     image: node:10-alpine
     ports:
       - 4000:4000
+    restart: always
     volumes:
       - ../../services/gateway:/gateway
     working_dir: /gateway
 
   inventory:
+    build:
+      context: ../../services/inventory
     entrypoint: ./entrypoint.sh
     environment:
       - PORT=4000
