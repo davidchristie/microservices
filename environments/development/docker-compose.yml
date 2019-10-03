@@ -95,5 +95,5 @@ services:
     ports:
       - 3000:80
     volumes:
-      - ../../services/web-app:/web-app
+      - ../../services/web-app/source:/web-app/source
     working_dir: /web-app
