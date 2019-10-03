@@ -1,4 +1,7 @@
 #!/bin/sh
 
-npm install
+set -e
+
+npm ci
+npm run wait-for-services
 npm start

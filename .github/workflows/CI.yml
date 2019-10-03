@@ -11,10 +11,10 @@ jobs:
       - name: Start services
         run: |
           docker-compose up -d
-          docker-compose logs
+          docker-compose ps
         working-directory: ${{ matrix.directory }}
       - name: Install test dependencies
-        run: npm install
+        run: npm ci
         working-directory: acceptance-tests
       - name: Run acceptance tests
         run: npm test -- --verbose
@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: ${{ matrix.directory }}
       - name: Run unit tests
         run: npm test -- --coverage --verbose
