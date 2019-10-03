@@ -28,12 +28,12 @@ function wait-for() {
   healthcheck=$1
 
   attempt_counter=0
-  max_attempts=30
+  max_attempts=60
 
   until $($healthcheck) ; do
 
     if [ ${attempt_counter} -eq ${max_attempts} ];then
-      echo "Max attempts reached"
+      echo "maximum attempts reached"
       exit 1
     fi
 
@@ -41,6 +41,8 @@ function wait-for() {
     attempt_counter=$(($attempt_counter+1))
     sleep 5
   done
+
+  echo "ready"
 }
 
 echo "Wait for gateway"
