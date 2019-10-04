@@ -3,4 +3,4 @@
 set -e
 
 ./actions/wait-for-healthcheck/run.sh \
-  curl --fail --output /dev/null --silent localhost:4000
+  curl --fail -H "accept:text/html" --output /dev/null --silent localhost:4000
