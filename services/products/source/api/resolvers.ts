@@ -15,15 +15,27 @@ const resolvers = {
     }
   },
   Query: {
-    allProducts(_, { page, perPage, sortField, sortOrder }) {
-      return core.getProducts({ page, perPage, sortField, sortOrder });
+    allProducts(_, { filter, page, perPage, sortField, sortOrder }) {
+      const { q: productSearch = undefined, ...productFilter } = filter || {};
+      return core.getProducts({
+        filter: productFilter,
+        page,
+        perPage,
+        search: productSearch,
+        sortField,
+        sortOrder
+      });
     },
     Product(_, { id }) {
       return core.getProduct({ id });
     },
-    async _allProductsMeta() {
+    async _allProductsMeta(_, { filter }) {
+      const { q: productSearch = undefined, ...productFilter } = filter || {};
       return {
-        count: await core.getProductCount()
+        count: await core.getProductCount({
+          filter: productFilter,
+          search: productSearch
+        })
       };
     }
   }

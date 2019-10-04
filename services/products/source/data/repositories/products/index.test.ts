@@ -1,13 +1,13 @@
 import faker from "faker";
 import { Driver } from "neo4j-driver/types/v1";
-import { Product } from "../types";
+import { Product } from "../../types";
 import {
   createProduct,
   deleteProduct,
   getProduct,
   getProductCount,
   getProducts
-} from "./products";
+} from ".";
 
 let driver: Driver;
 

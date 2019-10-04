@@ -1,31 +1,27 @@
 import uuid from "uuid/v4";
-import { createDriver } from "../neo4j";
-import { Product } from "../types";
+import { createDriver } from "../../neo4j";
+import { Product } from "../../types";
+import { buildProductSearchPlan, buildProductCountPlan } from "./plans";
+
+interface GetProductCountInput {
+  filter: {
+    name?: string;
+  };
+  search?: string;
+}
 
 interface GetProductsInput {
+  filter: {
+    name?: string;
+  };
   limit: number;
+  search?: string;
   skip: number;
   sortField: "name";
   sortOrder: "ASC" | "DESC";
 }
 
-const PRODUCT_FIELDS = ["name"];
-
-const SORT_ORDERS = ["ASC", "DESC"];
-
 const driver = createDriver();
-
-const validateProductField = (field: string): void => {
-  if (!PRODUCT_FIELDS.includes(field)) {
-    throw new Error("Invalid product field: " + field);
-  }
-};
-
-const validateSortOrder = (order: string): void => {
-  if (!SORT_ORDERS.includes(order)) {
-    throw new Error("Invalid sort order: " + order);
-  }
-};
 
 export const createProduct = async ({ name }): Promise<Product> => {
   const id = uuid();
@@ -66,34 +62,37 @@ export const getProduct = async ({ id }): Promise<Product | null> => {
   return result.records[0].get("product").properties;
 };
 
-export const getProductCount = async (): Promise<number> => {
+export const getProductCount = async ({
+  filter,
+  search
+}: GetProductCountInput): Promise<number> => {
   const session = driver.session();
-  const result = await session.run(
-    "MATCH (p:Product) WITH count(p) as count RETURN count"
-  );
+  const result = await session.run(buildProductCountPlan({ filter, search }), {
+    search: search ? `*${search}*` : undefined
+  });
   session.close();
   const count = result.records[0].get("count");
   return count.toNumberOrInfinity();
 };
 
 export const getProducts = async ({
+  filter,
   skip,
   limit,
+  search,
   sortField,
   sortOrder
 }: GetProductsInput): Promise<Product[]> => {
-  validateProductField(sortField);
-  validateSortOrder(sortOrder);
   const session = driver.session();
   const result = await session.run(
-    `
-      MATCH (p:Product)
-      RETURN p AS products
-      ORDER BY p.${sortField} ${sortOrder}
-      SKIP $skip
-      LIMIT $limit
-    `,
+    buildProductSearchPlan({
+      filter,
+      search,
+      sortField,
+      sortOrder
+    }),
     {
+      search: search ? `*${search}*` : undefined,
       skip,
       limit
     }
