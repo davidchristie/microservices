@@ -1,8 +1,18 @@
 const { client } = require("./gateway");
 
 const ALL_PRODUCTS_QUERY = `
-  query($sortField: ProductField!, $sortOrder: SortOrder!) {
-    allProducts(sortField: $sortField, sortOrder: $sortOrder) {
+  query(
+    $page: Int!,
+    $perPage: Int!,
+    $sortField: ProductField!,
+    $sortOrder: SortOrder!
+  ) {
+    allProducts(
+      page: $page,
+      perPage: $perPage,
+      sortField: $sortField,
+      sortOrder: $sortOrder
+    ) {
       id
       name
     }
@@ -33,8 +43,13 @@ const PRODUCT_QUERY = `
   }
 `;
 
-const allProductsQuery = ({ sortField, sortOrder }) => {
-  return client.request(ALL_PRODUCTS_QUERY, { sortField, sortOrder });
+const allProductsQuery = ({ page, perPage, sortField, sortOrder }) => {
+  return client.request(ALL_PRODUCTS_QUERY, {
+    page,
+    perPage,
+    sortField,
+    sortOrder
+  });
 };
 
 const createProductMutation = ({ name }) => {

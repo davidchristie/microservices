@@ -51,6 +51,8 @@ describe("creating a new product", () => {
 
     beforeEach(async () => {
       allProductsResponse = await allProductsQuery({
+        page: 0,
+        perPage: 10000,
         sortField: "name",
         sortOrder: "ASC"
       });
