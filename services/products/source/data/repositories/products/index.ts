@@ -68,6 +68,7 @@ export const getProductCount = async ({
 }: GetProductCountInput): Promise<number> => {
   const session = driver.session();
   const result = await session.run(buildProductCountPlan({ filter, search }), {
+    filter,
     search: search ? `*${search}*` : undefined
   });
   session.close();
@@ -91,6 +92,7 @@ export const getProducts = async ({
     sortOrder
   });
   const result = await session.run(plan, {
+    filter,
     search: search ? `*${search}*` : undefined,
     skip,
     limit
