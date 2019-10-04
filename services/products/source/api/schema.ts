@@ -10,6 +10,11 @@ export default gql`
     DESC
   }
 
+  input ProductFilter {
+    name: String
+    q: String
+  }
+
   extend type Mutation {
     createProduct(name: String!): Product!
     deleteProduct(id: ID!): Product!
@@ -17,13 +22,18 @@ export default gql`
 
   extend type Query {
     allProducts(
+      filter: ProductFilter
       page: Int!
       perPage: Int!
       sortField: ProductField!
       sortOrder: SortOrder!
     ): [Product!]!
     Product(id: ID!): Product!
-    _allProductsMeta(page: Int, perPage: Int): ProductListMeta!
+    _allProductsMeta(
+      filter: ProductFilter
+      page: Int
+      perPage: Int
+    ): ProductListMeta!
   }
 
   type ProductListMeta {

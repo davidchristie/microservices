@@ -68,6 +68,7 @@ services:
       - ../../services/products/source:/products/source
 
   products-neo4j:
+    container_name: products-neo4j
     environment:
       - "NEO4J_AUTH=neo4j/products"
     image: neo4j:3.5
