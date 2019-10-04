@@ -10,15 +10,15 @@ function wait-for-healthcheck() {
   until $healthcheck; do
 
     if [ ${attempt_counter} -eq ${max_attempts} ];then
-      echo "maximum attempts reached"
+      echo "Maximum attempts reached"
       exit 1
     fi
 
     echo "..."
-    attempt_counter=$(($attempt_counter+1))
+    attempt_counter=$(($attempt_counter + 1))
     sleep 5
   done
-  echo "ready"
+  echo "Ready"
 }
 
 wait-for-healthcheck $@

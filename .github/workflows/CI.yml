@@ -17,7 +17,7 @@ jobs:
           docker-compose logs
           docker-compose ps
         working-directory: ${{ matrix.directory }}
-      - name: Wait for products database
+      - name: Wait for products database to be ready
         run: ./actions/wait-for-products-database/run.sh
       - name: Create products index
         run: |
@@ -27,9 +27,10 @@ jobs:
       - name: Install test dependencies
         run: npm ci
         working-directory: acceptance-tests
-      - name: Wait for services to be ready
-        run: npm run wait-for-services
-        working-directory: acceptance-tests
+      - name: Wait for gateway to be ready
+        run: ./actions/wait-for-gateway/run.sh
+      - name: Wait for web app to be ready
+        run: ./actions/wait-for-web-app/run.sh
       - name: Run acceptance tests
         run: npm test -- --verbose
         working-directory: acceptance-tests
