@@ -9,6 +9,8 @@ export interface DeleteProductInput {
 }
 
 export interface GetProductsInput {
+  page: number;
+  perPage: number;
   sortField: "name";
   sortOrder: "ASC" | "DESC";
 }

@@ -140,10 +140,20 @@ describe("getProducts core function", () => {
 
   it("delegates to getProducts data function", async () => {
     (data.getProducts as jest.Mock).mockResolvedValueOnce(products);
-    const input: GetProductsInput = { sortField: "name", sortOrder: "ASC" };
+    const input: GetProductsInput = {
+      page: 3,
+      perPage: 10,
+      sortField: "name",
+      sortOrder: "ASC"
+    };
     const output = await core.getProducts(input);
     expect(data.getProducts).toHaveBeenCalledTimes(1);
-    expect(data.getProducts).toBeCalledWith(input);
+    expect(data.getProducts).toBeCalledWith({
+      skip: 30,
+      limit: 10,
+      sortField: "name",
+      sortOrder: "ASC"
+    });
     expect(output).toBe(products);
   });
 });

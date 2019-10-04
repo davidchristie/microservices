@@ -28,7 +28,7 @@ describe("allProducts query resolver", () => {
       }
     ];
     (core.getProducts as jest.Mock).mockResolvedValueOnce(queriedProducts);
-    const input = { sortField: "name", sortOrder: "ASC" };
+    const input = { page: 3, perPage: 10, sortField: "name", sortOrder: "ASC" };
     const output = await resolvers.Query.allProducts({}, input);
     expect(core.getProducts).toHaveBeenCalledTimes(1);
     expect(core.getProducts).toBeCalledWith(input);

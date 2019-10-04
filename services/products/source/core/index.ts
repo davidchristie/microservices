@@ -29,10 +29,16 @@ export const getProduct = async ({ id }): Promise<Product> => {
 };
 
 export const getProducts = ({
+  page,
+  perPage,
   sortField,
   sortOrder
 }: GetProductsInput): Promise<Product[]> => {
+  const skip = page * perPage;
+  const limit = perPage;
   return data.getProducts({
+    skip,
+    limit,
     sortField,
     sortOrder
   });

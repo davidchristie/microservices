@@ -204,7 +204,12 @@ describe("getProducts function", () => {
           }
         ]
       });
-      products = await getProducts({ sortField: "name", sortOrder: "ASC" });
+      products = await getProducts({
+        limit: 10,
+        skip: 30,
+        sortField: "name",
+        sortOrder: "ASC"
+      });
     });
 
     it("returns a list of products", () => {
@@ -228,15 +233,15 @@ describe("getProducts function", () => {
 
   it("throws error if sortField is invalid", async () => {
     const sortField: any = "invalid_field";
-    expect(getProducts({ sortField, sortOrder: "ASC" })).rejects.toThrowError(
-      new Error("Invalid product field: " + sortField)
-    );
+    expect(
+      getProducts({ skip: 30, limit: 10, sortField, sortOrder: "ASC" })
+    ).rejects.toThrowError(new Error("Invalid product field: " + sortField));
   });
 
   it("throws error if sortOrder is invalid", () => {
     const sortOrder: any = "invalid_order";
-    expect(getProducts({ sortField: "name", sortOrder })).rejects.toThrowError(
-      new Error("Invalid sort order: " + sortOrder)
-    );
+    expect(
+      getProducts({ limit: 10, skip: 30, sortField: "name", sortOrder })
+    ).rejects.toThrowError(new Error("Invalid sort order: " + sortOrder));
   });
 });

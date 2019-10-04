@@ -16,9 +16,14 @@ export default gql`
   }
 
   extend type Query {
-    allProducts(sortField: ProductField!, sortOrder: SortOrder!): [Product!]!
+    allProducts(
+      page: Int!
+      perPage: Int!
+      sortField: ProductField!
+      sortOrder: SortOrder!
+    ): [Product!]!
     Product(id: ID!): Product!
-    _allProductsMeta: ProductListMeta!
+    _allProductsMeta(page: Int, perPage: Int): ProductListMeta!
   }
 
   type ProductListMeta {

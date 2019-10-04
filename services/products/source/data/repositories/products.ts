@@ -3,6 +3,8 @@ import { createDriver } from "../neo4j";
 import { Product } from "../types";
 
 interface GetProductsInput {
+  limit: number;
+  skip: number;
   sortField: "name";
   sortOrder: "ASC" | "DESC";
 }
@@ -75,6 +77,8 @@ export const getProductCount = async (): Promise<number> => {
 };
 
 export const getProducts = async ({
+  skip,
+  limit,
   sortField,
   sortOrder
 }: GetProductsInput): Promise<Product[]> => {
@@ -82,7 +86,17 @@ export const getProducts = async ({
   validateSortOrder(sortOrder);
   const session = driver.session();
   const result = await session.run(
-    `MATCH (p:Product) RETURN p AS products ORDER BY p.${sortField} ${sortOrder}`
+    `
+      MATCH (p:Product)
+      RETURN p AS products
+      ORDER BY p.${sortField} ${sortOrder}
+      SKIP $skip
+      LIMIT $limit
+    `,
+    {
+      skip,
+      limit
+    }
   );
   session.close();
   return result.records.map(record => {

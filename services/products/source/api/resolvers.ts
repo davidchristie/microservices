@@ -15,8 +15,8 @@ const resolvers = {
     }
   },
   Query: {
-    allProducts(_, { sortField, sortOrder }) {
-      return core.getProducts({ sortField, sortOrder });
+    allProducts(_, { page, perPage, sortField, sortOrder }) {
+      return core.getProducts({ page, perPage, sortField, sortOrder });
     },
     Product(_, { id }) {
       return core.getProduct({ id });
