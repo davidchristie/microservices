@@ -17,6 +17,8 @@ jobs:
           docker-compose logs
           docker-compose ps
         working-directory: ${{ matrix.directory }}
+      - name: Wait for products database
+        run: ./actions/wait-for-products-database/run.sh
       - name: Create products index
         run: |
           export NEO4J_USERNAME=neo4j
