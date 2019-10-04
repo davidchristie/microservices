@@ -18,7 +18,10 @@ jobs:
           docker-compose ps
         working-directory: ${{ matrix.directory }}
       - name: Create products index
-        run: .actions/create-products-index/run.sh
+        run: |
+          export NEO4J_USERNAME=neo4j
+          export NEO4J_PASSWORD=products
+          ./actions/create-products-index/run.sh
       - name: Install test dependencies
         run: npm ci
         working-directory: acceptance-tests
