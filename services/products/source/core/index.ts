@@ -39,9 +39,5 @@ export const getProducts = ({
 };
 
 export const getProductCount = async (): Promise<number> => {
-  const products = await data.getProducts({
-    sortField: "name",
-    sortOrder: "ASC"
-  });
-  return products.length;
+  return data.getProductCount();
 };

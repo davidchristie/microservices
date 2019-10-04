@@ -64,6 +64,16 @@ export const getProduct = async ({ id }): Promise<Product | null> => {
   return result.records[0].get("product").properties;
 };
 
+export const getProductCount = async (): Promise<number> => {
+  const session = driver.session();
+  const result = await session.run(
+    "MATCH (p:Product) WITH count(p) as count RETURN count"
+  );
+  session.close();
+  const count = result.records[0].get("count");
+  return count.toNumberOrInfinity();
+};
+
 export const getProducts = async ({
   sortField,
   sortOrder

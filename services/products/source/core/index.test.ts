@@ -7,6 +7,7 @@ jest.mock("../data", () => ({
   createProduct: jest.fn(),
   deleteProduct: jest.fn(),
   getProduct: jest.fn(),
+  getProductCount: jest.fn(),
   getProducts: jest.fn()
 }));
 
@@ -113,27 +114,14 @@ describe("getProduct core function", () => {
 });
 
 describe("getProductCount core function", () => {
-  const products = [
-    {
-      id: faker.random.uuid()
-    },
-    {
-      id: faker.random.uuid()
-    },
-    {
-      id: faker.random.uuid()
-    }
-  ];
+  const count = 3;
 
   it("returns the number of products", async () => {
-    (data.getProducts as jest.Mock).mockResolvedValueOnce(products);
-    const count = await core.getProductCount();
-    expect(data.getProducts).toHaveBeenCalledTimes(1);
-    expect(data.getProducts).toBeCalledWith({
-      sortField: "name",
-      sortOrder: "ASC"
-    });
-    expect(count).toBe(products.length);
+    (data.getProductCount as jest.Mock).mockResolvedValueOnce(count);
+    const output = await core.getProductCount();
+    expect(data.getProductCount).toHaveBeenCalledTimes(1);
+    expect(data.getProductCount).toBeCalledWith();
+    expect(output).toBe(count);
   });
 });
 

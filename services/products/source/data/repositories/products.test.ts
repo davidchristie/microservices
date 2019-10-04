@@ -5,6 +5,7 @@ import {
   createProduct,
   deleteProduct,
   getProduct,
+  getProductCount,
   getProducts
 } from "./products";
 
@@ -131,6 +132,39 @@ describe("getProduct function", () => {
     it("closes the session", () => {
       expect(session.close).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe("getProductCount function", () => {
+  const numberOfProducts = 3;
+
+  let session: any;
+  let output: number;
+
+  beforeEach(async () => {
+    session = {
+      close: jest.fn(),
+      run: jest.fn()
+    };
+    (driver.session as any).mockReturnValueOnce(session);
+    (session.run as any).mockReturnValueOnce({
+      records: [
+        {
+          get: () => ({
+            toNumberOrInfinity: () => numberOfProducts
+          })
+        }
+      ]
+    });
+    output = await getProductCount();
+  });
+
+  it("returns the number of products", () => {
+    expect(output).toBe(numberOfProducts);
+  });
+
+  it("closes the session", () => {
+    expect(session.close).toHaveBeenCalledTimes(1);
   });
 });
 
