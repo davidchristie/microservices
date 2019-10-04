@@ -1,6 +1,7 @@
 import faker from "faker";
 import * as core from "../core";
 import resolvers from "./resolvers";
+import { numericLiteral } from "@babel/types";
 
 jest.mock("../core", () => ({
   createProduct: jest.fn(),
@@ -15,24 +16,71 @@ beforeEach(() => {
 });
 
 describe("allProducts query resolver", () => {
-  it("delegates to getProducts core function", async () => {
-    const queriedProducts = [
-      {
-        id: faker.random.uuid()
-      },
-      {
-        id: faker.random.uuid()
-      },
-      {
-        id: faker.random.uuid()
-      }
-    ];
+  const queriedProducts = [
+    {
+      id: faker.random.uuid()
+    },
+    {
+      id: faker.random.uuid()
+    },
+    {
+      id: faker.random.uuid()
+    }
+  ];
+
+  beforeEach(() => {
     (core.getProducts as jest.Mock).mockResolvedValueOnce(queriedProducts);
-    const input = { page: 3, perPage: 10, sortField: "name", sortOrder: "ASC" };
-    const output = await resolvers.Query.allProducts({}, input);
-    expect(core.getProducts).toHaveBeenCalledTimes(1);
-    expect(core.getProducts).toBeCalledWith(input);
-    expect(output).toBe(queriedProducts);
+  });
+
+  describe("with filter", () => {
+    it("delegates to getProducts core function", async () => {
+      const input = {
+        filter: {
+          name: faker.commerce.productName(),
+          q: faker.commerce.product()
+        },
+        page: faker.random.number(),
+        perPage: faker.random.number(),
+        sortField: "name",
+        sortOrder: faker.random.arrayElement(["ASC", "DESC"])
+      };
+      const output = await resolvers.Query.allProducts({}, input);
+      expect(core.getProducts).toHaveBeenCalledTimes(1);
+      expect(core.getProducts).toBeCalledWith({
+        filter: {
+          name: input.filter.name
+        },
+        page: input.page,
+        perPage: input.perPage,
+        search: input.filter.q,
+        sortField: input.sortField,
+        sortOrder: input.sortOrder
+      });
+      expect(output).toBe(queriedProducts);
+    });
+  });
+
+  describe("without filter", () => {
+    it("delegates to getProducts core function", async () => {
+      const input = {
+        filter: undefined,
+        page: faker.random.number(),
+        perPage: faker.random.number(),
+        sortField: "name",
+        sortOrder: "ASC"
+      };
+      const output = await resolvers.Query.allProducts({}, input);
+      expect(core.getProducts).toHaveBeenCalledTimes(1);
+      expect(core.getProducts).toBeCalledWith({
+        filter: {},
+        page: input.page,
+        perPage: input.perPage,
+        search: undefined,
+        sortField: input.sortField,
+        sortOrder: input.sortOrder
+      });
+      expect(output).toBe(queriedProducts);
+    });
   });
 });
 
@@ -110,14 +158,51 @@ describe("Product reference resolver", () => {
 });
 
 describe("_allProductsMeta query resolver", () => {
-  it("delegates to getProductCount core function", async () => {
-    const count = 3;
+  const count = 3;
+
+  let name: string;
+  let search: string;
+
+  beforeEach(() => {
+    name = faker.commerce.productName();
+    search = faker.commerce.product();
     (core.getProductCount as jest.Mock).mockResolvedValueOnce(count);
-    const output = await resolvers.Query._allProductsMeta();
-    expect(core.getProductCount).toHaveBeenCalledTimes(1);
-    expect(core.getProductCount).toBeCalledWith();
-    expect(output).toEqual({
-      count
+  });
+
+  describe("with filter", () => {
+    it("delegates to getProductCount core function", async () => {
+      const output = await resolvers.Query._allProductsMeta(undefined, {
+        filter: {
+          name,
+          q: search
+        }
+      });
+      expect(core.getProductCount).toHaveBeenCalledTimes(1);
+      expect(core.getProductCount).toBeCalledWith({
+        filter: {
+          name
+        },
+        search
+      });
+      expect(output).toEqual({
+        count
+      });
+    });
+  });
+
+  describe("without filter", () => {
+    it("delegates to getProductCount core function", async () => {
+      const output = await resolvers.Query._allProductsMeta(undefined, {
+        filter: undefined
+      });
+      expect(core.getProductCount).toHaveBeenCalledTimes(1);
+      expect(core.getProductCount).toBeCalledWith({
+        filter: {},
+        search: undefined
+      });
+      expect(output).toEqual({
+        count
+      });
     });
   });
 });

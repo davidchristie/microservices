@@ -114,13 +114,23 @@ describe("getProduct core function", () => {
 });
 
 describe("getProductCount core function", () => {
-  const count = 3;
+  let count: number;
+
+  beforeEach(() => {
+    count = faker.random.number();
+  });
 
   it("returns the number of products", async () => {
     (data.getProductCount as jest.Mock).mockResolvedValueOnce(count);
-    const output = await core.getProductCount();
+    const input = {
+      filter: {
+        name: faker.commerce.productName()
+      },
+      search: faker.commerce.product()
+    };
+    const output = await core.getProductCount(input);
     expect(data.getProductCount).toHaveBeenCalledTimes(1);
-    expect(data.getProductCount).toBeCalledWith();
+    expect(data.getProductCount).toBeCalledWith(input);
     expect(output).toBe(count);
   });
 });
@@ -141,18 +151,24 @@ describe("getProducts core function", () => {
   it("delegates to getProducts data function", async () => {
     (data.getProducts as jest.Mock).mockResolvedValueOnce(products);
     const input: GetProductsInput = {
-      page: 3,
-      perPage: 10,
+      filter: {
+        name: faker.commerce.productName()
+      },
+      page: faker.random.number(),
+      perPage: faker.random.number(),
+      search: faker.commerce.product(),
       sortField: "name",
-      sortOrder: "ASC"
+      sortOrder: faker.random.arrayElement(["ASC", "DESC"])
     };
     const output = await core.getProducts(input);
     expect(data.getProducts).toHaveBeenCalledTimes(1);
     expect(data.getProducts).toBeCalledWith({
-      skip: 30,
-      limit: 10,
+      filter: input.filter,
+      skip: input.page * input.perPage,
+      limit: input.perPage,
+      search: input.search,
       sortField: "name",
-      sortOrder: "ASC"
+      sortOrder: input.sortOrder
     });
     expect(output).toBe(products);
   });

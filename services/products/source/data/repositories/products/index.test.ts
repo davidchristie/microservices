@@ -11,7 +11,7 @@ import {
 
 let driver: Driver;
 
-jest.mock("../neo4j", () => {
+jest.mock("../../neo4j", () => {
   return {
     createDriver: () => {
       driver = {
@@ -136,12 +136,12 @@ describe("getProduct function", () => {
 });
 
 describe("getProductCount function", () => {
-  const numberOfProducts = 3;
-
+  let numberOfProducts: number;
   let session: any;
   let output: number;
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    numberOfProducts = faker.random.number();
     session = {
       close: jest.fn(),
       run: jest.fn()
@@ -156,20 +156,74 @@ describe("getProductCount function", () => {
         }
       ]
     });
-    output = await getProductCount();
   });
 
-  it("returns the number of products", () => {
-    expect(output).toBe(numberOfProducts);
+  describe("with search query", () => {
+    beforeEach(async () => {
+      output = await getProductCount({
+        filter: {
+          name: faker.commerce.productName()
+        },
+        search: faker.commerce.product()
+      });
+    });
+
+    it("returns the number of products", () => {
+      expect(output).toBe(numberOfProducts);
+    });
+
+    it("closes the session", () => {
+      expect(session.close).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it("closes the session", () => {
-    expect(session.close).toHaveBeenCalledTimes(1);
+  describe("without search query", () => {
+    beforeEach(async () => {
+      output = await getProductCount({
+        filter: {
+          name: faker.commerce.productName()
+        }
+      });
+    });
+
+    it("returns the number of products", () => {
+      expect(output).toBe(numberOfProducts);
+    });
+
+    it("closes the session", () => {
+      expect(session.close).toHaveBeenCalledTimes(1);
+    });
   });
 });
 
 describe("getProducts function", () => {
-  describe("with valid input", () => {
+  const result = {
+    records: [
+      {
+        get: () => ({
+          properties: {
+            id: faker.random.uuid()
+          }
+        })
+      },
+      {
+        get: () => ({
+          properties: {
+            id: faker.random.uuid()
+          }
+        })
+      },
+      {
+        get: () => ({
+          properties: {
+            id: faker.random.uuid()
+          }
+        })
+      }
+    ]
+  };
+
+  describe("with search query", () => {
     let products: Product[];
     let session: any;
 
@@ -179,34 +233,55 @@ describe("getProducts function", () => {
         run: jest.fn()
       };
       (driver.session as any).mockReturnValueOnce(session);
-      (session.run as any).mockReturnValueOnce({
-        records: [
-          {
-            get: () => ({
-              properties: {
-                id: faker.random.uuid()
-              }
-            })
-          },
-          {
-            get: () => ({
-              properties: {
-                id: faker.random.uuid()
-              }
-            })
-          },
-          {
-            get: () => ({
-              properties: {
-                id: faker.random.uuid()
-              }
-            })
-          }
-        ]
-      });
+      (session.run as any).mockReturnValueOnce(result);
       products = await getProducts({
-        limit: 10,
-        skip: 30,
+        filter: {
+          name: faker.commerce.productName()
+        },
+        limit: faker.random.number(),
+        search: faker.commerce.product(),
+        skip: faker.random.number(),
+        sortField: "name",
+        sortOrder: "ASC"
+      });
+    });
+
+    it("returns a list of products", () => {
+      expect(products).toEqual([
+        {
+          id: expect.any(String)
+        },
+        {
+          id: expect.any(String)
+        },
+        {
+          id: expect.any(String)
+        }
+      ]);
+    });
+
+    it("closes the session", () => {
+      expect(session.close).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("without search query", () => {
+    let products: Product[];
+    let session: any;
+
+    beforeEach(async () => {
+      session = {
+        close: jest.fn(),
+        run: jest.fn()
+      };
+      (driver.session as any).mockReturnValueOnce(session);
+      (session.run as any).mockReturnValueOnce(result);
+      products = await getProducts({
+        filter: {
+          name: faker.commerce.productName()
+        },
+        limit: faker.random.number(),
+        skip: faker.random.number(),
         sortField: "name",
         sortOrder: "ASC"
       });
@@ -232,16 +307,34 @@ describe("getProducts function", () => {
   });
 
   it("throws error if sortField is invalid", async () => {
-    const sortField: any = "invalid_field";
-    expect(
-      getProducts({ skip: 30, limit: 10, sortField, sortOrder: "ASC" })
+    const sortField: any = "<invalid_field>";
+    await expect(
+      getProducts({
+        filter: {
+          name: faker.commerce.productName()
+        },
+        search: faker.commerce.product(),
+        skip: faker.random.number(),
+        limit: faker.random.number(),
+        sortField,
+        sortOrder: faker.random.arrayElement(["ASC", "DESC"])
+      })
     ).rejects.toThrowError(new Error("Invalid product field: " + sortField));
   });
 
-  it("throws error if sortOrder is invalid", () => {
-    const sortOrder: any = "invalid_order";
-    expect(
-      getProducts({ limit: 10, skip: 30, sortField: "name", sortOrder })
+  it("throws error if sortOrder is invalid", async () => {
+    const sortOrder: any = "<invalid_order>";
+    await expect(
+      getProducts({
+        filter: {
+          name: faker.commerce.productName()
+        },
+        limit: faker.random.number(),
+        search: faker.commerce.product(),
+        skip: faker.random.number(),
+        sortField: "name",
+        sortOrder
+      })
     ).rejects.toThrowError(new Error("Invalid sort order: " + sortOrder));
   });
 });

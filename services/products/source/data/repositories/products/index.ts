@@ -84,19 +84,17 @@ export const getProducts = async ({
   sortOrder
 }: GetProductsInput): Promise<Product[]> => {
   const session = driver.session();
-  const result = await session.run(
-    buildProductSearchPlan({
-      filter,
-      search,
-      sortField,
-      sortOrder
-    }),
-    {
-      search: search ? `*${search}*` : undefined,
-      skip,
-      limit
-    }
-  );
+  const plan = buildProductSearchPlan({
+    filter,
+    search,
+    sortField,
+    sortOrder
+  });
+  const result = await session.run(plan, {
+    search: search ? `*${search}*` : undefined,
+    skip,
+    limit
+  });
   session.close();
   return result.records.map(record => {
     return record.get("products").properties;
