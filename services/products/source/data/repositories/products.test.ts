@@ -5,7 +5,7 @@ import {
   createProduct,
   deleteProduct,
   getProduct,
-  allProducts
+  getProducts
 } from "./products";
 
 let driver: Driver;
@@ -20,79 +20,6 @@ jest.mock("../neo4j", () => {
       return driver;
     }
   };
-});
-
-describe("allProducts function", () => {
-  describe("with valid input", () => {
-    let products: Product[];
-    let session: any;
-
-    beforeEach(async () => {
-      session = {
-        close: jest.fn(),
-        run: jest.fn()
-      };
-      (driver.session as any).mockReturnValueOnce(session);
-      (session.run as any).mockReturnValueOnce({
-        records: [
-          {
-            get: () => ({
-              properties: {
-                id: faker.random.uuid()
-              }
-            })
-          },
-          {
-            get: () => ({
-              properties: {
-                id: faker.random.uuid()
-              }
-            })
-          },
-          {
-            get: () => ({
-              properties: {
-                id: faker.random.uuid()
-              }
-            })
-          }
-        ]
-      });
-      products = await allProducts();
-    });
-
-    it("returns a list of products", () => {
-      expect(products).toEqual([
-        {
-          id: expect.any(String)
-        },
-        {
-          id: expect.any(String)
-        },
-        {
-          id: expect.any(String)
-        }
-      ]);
-    });
-
-    it("closes the session", () => {
-      expect(session.close).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it("throws error if sortField is invalid", async () => {
-    const sortField: any = "invalid_field";
-    expect(allProducts({ sortField })).rejects.toThrowError(
-      new Error("Invalid product field: " + sortField)
-    );
-  });
-
-  it("throws error if sortOrder is invalid", () => {
-    const sortOrder: any = "invalid_order";
-    expect(allProducts({ sortOrder })).rejects.toThrowError(
-      new Error("Invalid sort order: " + sortOrder)
-    );
-  });
 });
 
 describe("createProduct function", () => {
@@ -144,7 +71,7 @@ describe("deleteProduct function", () => {
 describe("getProduct function", () => {
   describe("when product exists", () => {
     let id: string;
-    let product: Product;
+    let product: Product | null;
     let session: any;
 
     beforeEach(async () => {
@@ -181,7 +108,7 @@ describe("getProduct function", () => {
 
   describe("when product does not exist", () => {
     let id: string;
-    let getProductError: Error;
+    let product: Product | null;
     let session: any;
 
     beforeEach(async () => {
@@ -194,19 +121,88 @@ describe("getProduct function", () => {
       (session.run as any).mockReturnValueOnce({
         records: []
       });
-      try {
-        await getProduct({ id });
-      } catch (error) {
-        getProductError = error;
-      }
+      product = await getProduct({ id });
     });
 
-    it("throws an error", () => {
-      expect(getProductError).toEqual(new Error("Product does not exist."));
+    it("returns null", () => {
+      expect(product).toBeNull();
     });
 
     it("closes the session", () => {
       expect(session.close).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe("getProducts function", () => {
+  describe("with valid input", () => {
+    let products: Product[];
+    let session: any;
+
+    beforeEach(async () => {
+      session = {
+        close: jest.fn(),
+        run: jest.fn()
+      };
+      (driver.session as any).mockReturnValueOnce(session);
+      (session.run as any).mockReturnValueOnce({
+        records: [
+          {
+            get: () => ({
+              properties: {
+                id: faker.random.uuid()
+              }
+            })
+          },
+          {
+            get: () => ({
+              properties: {
+                id: faker.random.uuid()
+              }
+            })
+          },
+          {
+            get: () => ({
+              properties: {
+                id: faker.random.uuid()
+              }
+            })
+          }
+        ]
+      });
+      products = await getProducts({ sortField: "name", sortOrder: "ASC" });
+    });
+
+    it("returns a list of products", () => {
+      expect(products).toEqual([
+        {
+          id: expect.any(String)
+        },
+        {
+          id: expect.any(String)
+        },
+        {
+          id: expect.any(String)
+        }
+      ]);
+    });
+
+    it("closes the session", () => {
+      expect(session.close).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("throws error if sortField is invalid", async () => {
+    const sortField: any = "invalid_field";
+    expect(getProducts({ sortField, sortOrder: "ASC" })).rejects.toThrowError(
+      new Error("Invalid product field: " + sortField)
+    );
+  });
+
+  it("throws error if sortOrder is invalid", () => {
+    const sortOrder: any = "invalid_order";
+    expect(getProducts({ sortField: "name", sortOrder })).rejects.toThrowError(
+      new Error("Invalid sort order: " + sortOrder)
+    );
   });
 });

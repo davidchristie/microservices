@@ -35,7 +35,7 @@
   },
   "name": "products",
   "nodemonConfig": {
-    "exec": "ts-node ./source/index.ts",
+    "exec": "ts-node",
     "ext": "ts",
     "ignore": [
       "**/*.test.ts"
@@ -46,8 +46,8 @@
   },
   "private": true,
   "scripts": {
-    "api:development": "nodemon",
-    "api:production": "node build/index.js",
+    "api:development": "nodemon ./source/start-api.ts",
+    "api:production": "node build/start-api.js",
     "build": "tsc",
     "test": "jest"
   }

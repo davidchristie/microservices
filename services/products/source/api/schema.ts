@@ -1,8 +1,6 @@
-import { buildFederatedSchema } from "@apollo/federation";
-import { ApolloServer, gql } from "apollo-server";
-import resolvers from "./resolvers";
+import { gql } from "apollo-server";
 
-const typeDefs = gql`
+export default gql`
   enum ProductField {
     name
   }
@@ -34,15 +32,3 @@ const typeDefs = gql`
     weight: Int
   }
 `;
-
-const server = new ApolloServer({
-  debug: process.env.NODE_ENV !== "production",
-  schema: buildFederatedSchema([
-    {
-      resolvers,
-      typeDefs
-    }
-  ])
-});
-
-export default server;
