@@ -161,4 +161,5 @@ services:
       - 3000:80
 
 volumes:
+  customers-mysql-data:
   platform-consul-data:
