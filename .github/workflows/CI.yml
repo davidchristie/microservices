@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Set ownership of Consul data volume
+        run: ./actions/set-consul-data-volume-ownership/run.sh
       - name: Build service images
         run: docker-compose build
         working-directory: ${{ matrix.directory }}
