@@ -38,6 +38,7 @@ services:
     depends_on:
       - accounts
       - inventory
+      - platform-consul
       - products
       - reviews
     environment:
@@ -66,6 +67,14 @@ services:
     volumes:
       - ../../services/inventory:/inventory
     working_dir: /inventory
+
+  platform-consul:
+    command: agent -bootstrap -client=0.0.0.0 -server -ui
+    image: consul:1.6
+    ports:
+      - 8500:8500
+    volumes:
+      - platform-consul-data:/consul/data
 
   products:
     build:
@@ -112,3 +121,6 @@ services:
       dockerfile: production.Dockerfile
     ports:
       - 3000:80
+
+volumes:
+  platform-consul-data:

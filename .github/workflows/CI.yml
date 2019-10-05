@@ -17,6 +17,10 @@ jobs:
           docker-compose logs
           docker-compose ps
         working-directory: ${{ matrix.directory }}
+      - name: Wait for platform Consul to be ready
+        run: ./actions/wait-for-platform-consul/run.sh
+      - name: Set platform Consul data
+        run: ./actions/set-platform-consul-data/run.sh
       - name: Wait for products database to be ready
         run: ./actions/wait-for-products-database/run.sh
       - name: Create products index

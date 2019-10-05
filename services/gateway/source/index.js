@@ -1,25 +1,38 @@
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
 const { ApolloServer } = require("apollo-server");
 const jwt = require("jsonwebtoken");
+const { getServiceList } = require("./data/services");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
-const gateway = new ApolloGateway({
-  buildService({ url }) {
-    return new RemoteGraphQLDataSource({
-      url,
-      willSendRequest({ request, context }) {
-        request.http.headers.set("user-id", context.userID);
-      }
-    });
-  },
-  serviceList: [
-    { name: "accounts", url: "http://accounts:4000/graphql" },
-    { name: "reviews", url: "http://reviews:4000/graphql" },
-    { name: "products", url: "http://products:4000/graphql" },
-    { name: "inventory", url: "http://inventory:4000/graphql" }
-  ]
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at: Promise", promise, "reason:", reason);
+  process.exit(1);
 });
+
+const createGateway = async (attempt = 1) => {
+  try {
+    console.log(`Creating gateway (attempt ${attempt})...`);
+    const serviceList = await getServiceList();
+    console.log("Service list:", serviceList);
+    return new ApolloGateway({
+      buildService({ url }) {
+        return new RemoteGraphQLDataSource({
+          url,
+          willSendRequest({ request, context }) {
+            request.http.headers.set("user-id", context.userID);
+          }
+        });
+      },
+      serviceList
+    });
+  } catch (error) {
+    console.error(error);
+    console.log("Retrying...");
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    return createGateway(attempt + 1);
+  }
+};
 
 const getUserID = request => {
   const { token } = request.headers;
@@ -34,6 +47,7 @@ const getUserID = request => {
 };
 
 (async () => {
+  const gateway = await createGateway();
   const { schema, executor } = await gateway.load();
 
   const server = new ApolloServer({
