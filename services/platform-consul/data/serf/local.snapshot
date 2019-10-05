@@ -4,3 +4,8 @@ alive: a37fc64e6ef1 172.20.0.4:8301
 event-clock: 2
 alive: 817ef4cb29c5 172.22.0.2:8301
 event-clock: 3
+alive: ea6097c08d5c 172.24.0.2:8301
+event-clock: 4
+alive: 751912e61ffb 172.25.0.2:8301
+alive: 751912e61ffb 172.25.0.2:8301
+event-clock: 5
