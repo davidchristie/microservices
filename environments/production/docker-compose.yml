@@ -74,7 +74,7 @@ services:
     ports:
       - 8500:8500
     volumes:
-      - ../../services/platform-consul/data:/consul/data
+      - platform-consul-data:/consul/data
 
   products:
     build:
@@ -121,3 +121,6 @@ services:
       dockerfile: production.Dockerfile
     ports:
       - 3000:80
+
+volumes:
+  platform-consul-data:

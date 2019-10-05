@@ -8,8 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Set ownership of Consul data volume
-        run: ./actions/set-consul-data-volume-ownership/run.sh
       - name: Build service images
         run: docker-compose build
         working-directory: ${{ matrix.directory }}
@@ -19,6 +17,10 @@ jobs:
           docker-compose logs
           docker-compose ps
         working-directory: ${{ matrix.directory }}
+      - name: Wait for platform Consul to be ready
+        run: ./actions/wait-for-platform-consul/run.sh
+      - name: Set platform Consul data
+        run: ./actions/set-platform-consul-data/run.sh
       - name: Wait for products database to be ready
         run: ./actions/wait-for-products-database/run.sh
       - name: Create products index
@@ -30,7 +32,9 @@ jobs:
         run: npm ci
         working-directory: acceptance-tests
       - name: Wait for gateway to be ready
-        run: ./actions/wait-for-gateway/run.sh
+        run: |
+          ./actions/wait-for-gateway/run.sh
+          docker-compose logs gateway
       - name: Wait for web app to be ready
         run: ./actions/wait-for-web-app/run.sh
       - name: Run acceptance tests

@@ -50,7 +50,7 @@ services:
     ports:
       - 8500:8500
     volumes:
-      - ../../services/platform-consul/data:/consul/data
+      - platform-consul-data:/consul/data
 
   inventory:
     build:
@@ -107,3 +107,6 @@ services:
     volumes:
       - ../../services/web-app/source:/web-app/source
     working_dir: /web-app
+
+volumes:
+  platform-consul-data:
