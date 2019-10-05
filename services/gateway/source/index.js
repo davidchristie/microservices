@@ -5,6 +5,11 @@ const { getServiceList } = require("./data/services");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at: Promise", promise, "reason:", reason);
+  process.exit(1);
+});
+
 const createGateway = async (attempt = 1) => {
   try {
     console.log(`Creating gateway (attempt ${attempt})...`);

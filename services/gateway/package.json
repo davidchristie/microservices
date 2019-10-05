@@ -7,12 +7,12 @@
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "nodemon": "^1.19.3"
+    "forever": "^1.0.0"
   },
   "name": "gateway",
   "private": true,
   "scripts": {
-    "api:development": "nodemon source/index.js",
+    "api:development": "forever source/index.js",
     "api:production": "node source/index.js"
   }
 }
