@@ -9,10 +9,10 @@ const getServiceList = () => {
       },
       function(error, result) {
         if (error) {
-          reject(error);
+          return reject(error);
         }
         if (!result) {
-          reject(new Error("Service list not available"));
+          return reject(new Error("Service list not available"));
         }
         const serviceList = result.map(record => {
           return {
@@ -20,7 +20,7 @@ const getServiceList = () => {
             url: record.Value
           };
         });
-        resolve(serviceList);
+        return resolve(serviceList);
       }
     );
   });
