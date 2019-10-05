@@ -9,6 +9,11 @@ curl \
 
 curl \
     --request PUT \
+    --data "http://customers:4000" \
+    localhost:8500/v1/kv/gateway/services/customers/url
+
+curl \
+    --request PUT \
     --data "http://inventory:4000" \
     localhost:8500/v1/kv/gateway/services/inventory/url
 
