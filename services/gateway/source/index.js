@@ -1,25 +1,25 @@
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
 const { ApolloServer } = require("apollo-server");
 const jwt = require("jsonwebtoken");
+const { getServiceList } = require("./data/services");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
-const gateway = new ApolloGateway({
-  buildService({ url }) {
-    return new RemoteGraphQLDataSource({
-      url,
-      willSendRequest({ request, context }) {
-        request.http.headers.set("user-id", context.userID);
-      }
-    });
-  },
-  serviceList: [
-    { name: "accounts", url: "http://accounts:4000/graphql" },
-    { name: "reviews", url: "http://reviews:4000/graphql" },
-    { name: "products", url: "http://products:4000/graphql" },
-    { name: "inventory", url: "http://inventory:4000/graphql" }
-  ]
-});
+const createGateway = async () => {
+  const serviceList = await getServiceList();
+  console.log("Service list:", serviceList);
+  return new ApolloGateway({
+    buildService({ url }) {
+      return new RemoteGraphQLDataSource({
+        url,
+        willSendRequest({ request, context }) {
+          request.http.headers.set("user-id", context.userID);
+        }
+      });
+    },
+    serviceList
+  });
+};
 
 const getUserID = request => {
   const { token } = request.headers;
@@ -34,6 +34,7 @@ const getUserID = request => {
 };
 
 (async () => {
+  const gateway = await createGateway();
   const { schema, executor } = await gateway.load();
 
   const server = new ApolloServer({

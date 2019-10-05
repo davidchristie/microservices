@@ -32,6 +32,7 @@ services:
     depends_on:
       - accounts
       - inventory
+      - platform-consul
       - products
       - reviews
     environment:
@@ -42,6 +43,14 @@ services:
     restart: always
     volumes:
       - ../../services/gateway/source:/gateway/source
+
+  platform-consul:
+    command: agent -bootstrap -client=0.0.0.0 -server -ui
+    image: consul:1.6
+    ports:
+      - 8500:8500
+    volumes:
+      - ../../services/platform-consul/data:/consul/data
 
   inventory:
     build:
