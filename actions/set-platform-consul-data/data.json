@@ -1,0 +1,37 @@
+[
+  {
+    "KV": {
+      "Verb": "set",
+      "Key": "gateway/services/accounts/url",
+      "Value": "aHR0cDovL2FjY291bnRzOjQwMDAK"
+    }
+  },
+  {
+    "KV": {
+      "Verb": "set",
+      "Key": "gateway/services/customers/url",
+      "Value": "aHR0cDovL2N1c3RvbWVyczo0MDAwCg=="
+    }
+  },
+  {
+    "KV": {
+      "Verb": "set",
+      "Key": "gateway/services/inventory/url",
+      "Value": "aHR0cDovL2ludmVudG9yeTo0MDAwCg=="
+    }
+  },
+  {
+    "KV": {
+      "Verb": "set",
+      "Key": "gateway/services/products/url",
+      "Value": "aHR0cDovL3Byb2R1Y3RzOjQwMDAK"
+    }
+  },
+  {
+    "KV": {
+      "Verb": "set",
+      "Key": "gateway/services/reviews/url",
+      "Value": "aHR0cDovL3Jldmlld3M6NDAwMAo="
+    }
+  }
+]
